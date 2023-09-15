@@ -1,8 +1,9 @@
 Hi there 👋
 
 - 🔭 I’m Alphaeus, a Year 4 computer science undergraduate at NTU
-- 🤔 Interested in many areas of software development, from machine learning to web development
-- 📫 Feel free to reach me at alphaolivegreen@gmail.com
+- 🤔 Interested in different areas of AI. CV and NLP.
+- 📫 Feel free to reach me at alphaolivegreen@gmail.com / ang096@e.ntu.edu.sg
+- ⚡ Fun fact: I once ate ~1kg of salmon at one go.
 - 😄 Thanks for dropping by!
 
 <!-- ![AlphaeusNg's GitHub stats](https://github-readme-stats.vercel.app/api?username=AlphaeusNg&count_private=true&show_icons=true&theme=dark)
