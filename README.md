@@ -1,34 +1,16 @@
-<div align="center">
+### Hi, I'm Alphaeus Ng 👋
 
-# 🕹️ Alphaeus Arcade
+AI Research Engineer @ Panasonic R&D (Singapore) · NTU CS · into CV & NLP.
 
-**Browser mini-games + local scoreboard** — not a portfolio.
+| | |
+|:--|:--|
+| 🌐 **Portfolio** | [alphaeusng.github.io](https://alphaeusng.github.io/) — work, story, CV |
+| 🕹️ **Arcade** | [alphaeusng.github.io/AlpArcade](https://alphaeusng.github.io/AlpArcade/) — mini-games |
+| 📦 **Arcade source** | [github.com/AlphaeusNg/AlpArcade](https://github.com/AlphaeusNg/AlpArcade) |
+| 📦 **Portfolio source** | [github.com/AlphaeusNg/alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) |
+| 📫 **Email** | [alphaolivegreen@gmail.com](mailto:alphaolivegreen@gmail.com) |
+| 💼 **LinkedIn** | [linkedin.com/in/alphaeus-ng](https://sg.linkedin.com/in/alphaeus-ng) |
 
-[![Play](https://img.shields.io/badge/Play_Arcade-alphaeusng.github.io%2FAlphaeusNg-2dd4bf?style=for-the-badge&labelColor=0b1220)](https://alphaeusng.github.io/AlphaeusNg/)
-[![Portfolio](https://img.shields.io/badge/Who_I_am-alphaeusng.github.io-C9A227?style=for-the-badge&labelColor=0b1220)](https://alphaeusng.github.io/)
+⚡ Fun fact: I once ate ~1kg of salmon at one go.
 
-</div>
-
----
-
-This special GitHub profile repo hosts **Alphaeus Arcade**: fun, lightweight games you can play in the browser.
-
-### Games
-Tic-Tac-Toe · Space Shooter · Snake · Reaction Lab · Memory Match  
-(Sounds, difficulty ramps, explore in the browser.)
-
-### Scoreboard
-Player tag, XP, personal bests, hall of fame — **`localStorage`** + export/import codes.
-
-### Links
-- 🕹️ **Arcade:** https://alphaeusng.github.io/AlphaeusNg/
-- 🌐 **Portfolio (the real bio / CV):** https://alphaeusng.github.io/
-- 🐙 **GitHub:** https://github.com/AlphaeusNg
-- ✉️ **Email:** alphaolivegreen@gmail.com
-
-### Enable GitHub Pages
-Repo **Settings → Pages → Deploy from branch → `main` / root**.
-
----
-
-Built for fun by **Alphaeus Ng**. For work history, projects, and contact, use the [portfolio](https://alphaeusng.github.io/).
+Thanks for dropping by!
