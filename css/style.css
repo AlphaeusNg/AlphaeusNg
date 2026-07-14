@@ -714,6 +714,115 @@ main {
   background: #04070e;
 }
 
+.sh-stage {
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.sh-stage #sh-canvas {
+  width: 100%;
+  margin: 0;
+}
+
+.sh-hit-flash {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(251, 113, 133, 0.55), rgba(127, 29, 29, 0.75));
+  opacity: 0;
+  z-index: 2;
+}
+
+.sh-hit-flash.play {
+  animation: sh-flash 0.75s ease-out forwards;
+}
+
+.sh-life-banner {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%) scale(0.85);
+  z-index: 3;
+  pointer-events: none;
+  text-align: center;
+  padding: 0.85rem 1.4rem;
+  border-radius: 14px;
+  border: 1px solid rgba(251, 113, 133, 0.55);
+  background: rgba(8, 10, 18, 0.88);
+  box-shadow: 0 0 40px rgba(251, 113, 133, 0.35);
+  opacity: 0;
+}
+
+.sh-life-banner.play {
+  animation: sh-banner 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.sh-life-banner-main {
+  display: block;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  color: #fecdd3;
+}
+
+.sh-life-banner-sub {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: #fb7185;
+}
+
+.sh-lives.lost {
+  color: #fb7185 !important;
+  animation: sh-lives-pop 0.7s ease;
+}
+
+@keyframes sh-flash {
+  0% {
+    opacity: 0.95;
+  }
+  35% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sh-banner {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.7);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -58%) scale(1.02);
+  }
+}
+
+@keyframes sh-lives-pop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.45);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Reaction */
 .rx-pad {
   width: 100%;

@@ -6,11 +6,18 @@
       <div class="shooter-wrap">
         <div class="game-hud">
           <div><span class="hud-label">Score</span><strong id="sh-score">0</strong></div>
-          <div><span class="hud-label">Lives</span><strong id="sh-lives">3</strong></div>
+          <div><span class="hud-label">Lives</span><strong id="sh-lives" class="sh-lives">3</strong></div>
           <div><span class="hud-label">Wave</span><strong id="sh-wave">1</strong></div>
         </div>
-        <canvas id="sh-canvas" width="420" height="520" aria-label="Space shooter"></canvas>
-        <p class="game-hint" id="sh-hint">← → / A D · Space / tap shoot · waves get meaner</p>
+        <div class="sh-stage">
+          <canvas id="sh-canvas" width="420" height="520" aria-label="Space shooter"></canvas>
+          <div class="sh-hit-flash" id="sh-hit-flash" hidden aria-hidden="true"></div>
+          <div class="sh-life-banner" id="sh-life-banner" hidden aria-live="assertive">
+            <span class="sh-life-banner-main">LIFE LOST</span>
+            <span class="sh-life-banner-sub" id="sh-life-banner-sub">−1</span>
+          </div>
+        </div>
+        <p class="game-hint" id="sh-hint">← → / A D or drag · auto-fire · P pause</p>
         <div class="game-actions">
           <button type="button" class="btn primary" id="sh-start">Launch</button>
         </div>
@@ -23,11 +30,31 @@
     const livesEl = root.querySelector("#sh-lives");
     const waveEl = root.querySelector("#sh-wave");
     const hintEl = root.querySelector("#sh-hint");
+    const hitFlashEl = root.querySelector("#sh-hit-flash");
+    const lifeBannerEl = root.querySelector("#sh-life-banner");
+    const lifeBannerSub = root.querySelector("#sh-life-banner-sub");
 
     const W = canvas.width;
     const H = canvas.height;
 
-    let ship, bullets, eBullets, enemies, particles, keys, score, lives, wave, running, raf, last, spawnTimer, submitted, waveAnnounce;
+    let ship,
+      bullets,
+      eBullets,
+      enemies,
+      particles,
+      keys,
+      score,
+      lives,
+      wave,
+      running,
+      raf,
+      last,
+      spawnTimer,
+      submitted,
+      waveAnnounce,
+      invuln,
+      hitAnim,
+      hitBannerTimer;
 
     function waveMods(w) {
       return {
@@ -54,10 +81,16 @@
       spawnTimer = 0;
       submitted = false;
       waveAnnounce = 90;
+      invuln = 0;
+      hitAnim = 0;
+      clearTimeout(hitBannerTimer);
+      hitFlashEl.hidden = true;
+      lifeBannerEl.hidden = true;
+      livesEl.classList.remove("lost");
       scoreEl.textContent = "0";
       livesEl.textContent = "3";
       waveEl.textContent = "1";
-      hintEl.textContent = "Wave 1 — warm-up";
+      hintEl.textContent = "Wave 1 — warm-up · auto-fire on";
     }
 
     function spawnEnemy() {
@@ -91,11 +124,22 @@
     }
 
     function drawShip() {
+      // Blink while invulnerable after a hit
+      if (invuln > 0 && Math.floor(invuln / 4) % 2 === 0) return;
+
       ctx.save();
       ctx.translate(ship.x, ship.y);
-      ctx.fillStyle = "#2dd4bf";
-      ctx.shadowColor = "#2dd4bf";
-      ctx.shadowBlur = 14;
+      if (hitAnim > 0) {
+        const shake = Math.sin(hitAnim * 1.8) * 4;
+        ctx.translate(shake, 0);
+        ctx.fillStyle = "#fb7185";
+        ctx.shadowColor = "#fb7185";
+        ctx.shadowBlur = 22;
+      } else {
+        ctx.fillStyle = "#2dd4bf";
+        ctx.shadowColor = "#2dd4bf";
+        ctx.shadowBlur = 14;
+      }
       ctx.beginPath();
       ctx.moveTo(0, -ship.h / 2);
       ctx.lineTo(ship.w / 2, ship.h / 2);
@@ -104,6 +148,37 @@
       ctx.closePath();
       ctx.fill();
       ctx.restore();
+    }
+
+    function playHitFeedback() {
+      // Full-screen red flash + banner over the canvas
+      hitFlashEl.hidden = false;
+      hitFlashEl.classList.remove("play");
+      // reflow so animation restarts
+      void hitFlashEl.offsetWidth;
+      hitFlashEl.classList.add("play");
+
+      lifeBannerSub.textContent = lives > 0 ? `${lives} left` : "LAST CHANCE…";
+      if (lives <= 0) lifeBannerSub.textContent = "0 left";
+      lifeBannerEl.querySelector(".sh-life-banner-main").textContent =
+        lives > 0 ? "LIFE LOST" : "SHIP DOWN";
+      lifeBannerEl.hidden = false;
+      lifeBannerEl.classList.remove("play");
+      void lifeBannerEl.offsetWidth;
+      lifeBannerEl.classList.add("play");
+
+      livesEl.classList.remove("lost");
+      void livesEl.offsetWidth;
+      livesEl.classList.add("lost");
+
+      clearTimeout(hitBannerTimer);
+      hitBannerTimer = setTimeout(() => {
+        hitFlashEl.hidden = true;
+        hitFlashEl.classList.remove("play");
+        lifeBannerEl.hidden = true;
+        lifeBannerEl.classList.remove("play");
+        livesEl.classList.remove("lost");
+      }, 900);
     }
 
     function maybeAdvanceWave() {
@@ -138,13 +213,18 @@
         ctx.fillRect(sx, sy, 1.5, 1.5);
       }
 
+      if (invuln > 0) invuln -= dt;
+      if (hitAnim > 0) hitAnim -= dt;
+
       if (keys.ArrowLeft || keys.a) ship.x -= (5.2 + wave * 0.08) * dt;
       if (keys.ArrowRight || keys.d) ship.x += (5.2 + wave * 0.08) * dt;
       ship.x = Math.max(18, Math.min(W - 18, ship.x));
+
+      // Auto-fire
       if (ship.cool > 0) ship.cool -= dt;
-      if ((keys[" "] || keys.Space) && ship.cool <= 0) {
+      if (ship.cool <= 0 && invuln < 35) {
         bullets.push({ x: ship.x, y: ship.y - 16, vy: -9.5 });
-        ship.cool = Math.max(5, 9 - wave * 0.15);
+        ship.cool = Math.max(5.5, 10 - wave * 0.2);
         ArcadeSFX?.shoot();
       }
 
@@ -170,7 +250,7 @@
         b.x += (b.vx || 0) * dt;
         ctx.fillStyle = "#fb7185";
         ctx.fillRect(b.x - 2, b.y, 4, 8);
-        if (Math.abs(b.x - ship.x) < 14 && Math.abs(b.y - ship.y) < 14) {
+        if (invuln <= 0 && Math.abs(b.x - ship.x) < 14 && Math.abs(b.y - ship.y) < 14) {
           hurt();
           return false;
         }
@@ -217,6 +297,7 @@
         }
 
         if (
+          invuln <= 0 &&
           Math.abs(e.x - ship.x) < (e.w + ship.w) / 2.4 &&
           Math.abs(e.y - ship.y) < (e.h + ship.h) / 2.4
         ) {
@@ -241,6 +322,18 @@
 
       drawShip();
 
+      // Canvas-side hit pulse ring
+      if (hitAnim > 0) {
+        const t = hitAnim / 45;
+        ctx.strokeStyle = `rgba(251,113,133,${t})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(ship.x, ship.y, 20 + (1 - t) * 50, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = `rgba(251,113,133,${0.12 * t})`;
+        ctx.fillRect(0, 0, W, H);
+      }
+
       if (waveAnnounce > 0) {
         waveAnnounce -= dt;
         ctx.fillStyle = `rgba(45,212,191,${Math.min(1, waveAnnounce / 40)})`;
@@ -253,11 +346,25 @@
     }
 
     function hurt() {
+      if (invuln > 0 || !running) return;
       lives -= 1;
       livesEl.textContent = String(lives);
+      invuln = 70; // brief i-frames so one collision ≠ multi-death
+      hitAnim = 45;
       ArcadeSFX?.explode();
-      burst(ship.x, ship.y, "#fb7185", 16);
-      if (lives <= 0) endGame();
+      burst(ship.x, ship.y, "#fb7185", 28);
+      burst(ship.x, ship.y, "#fbbf24", 14);
+      playHitFeedback();
+      // clear nearby enemy bullets so you can recover
+      eBullets = eBullets.filter(
+        (b) => Math.hypot(b.x - ship.x, b.y - ship.y) > 60
+      );
+      if (lives <= 0) {
+        // short beat so the animation is readable, then game over
+        setTimeout(() => {
+          if (lives <= 0) endGame();
+        }, 650);
+      }
     }
 
     function endGame() {
@@ -292,15 +399,11 @@
     function onKeyDown(e) {
       keys[e.key] = true;
       keys[e.key.toLowerCase()] = true;
-      if (e.key === " " || e.code === "Space") {
-        e.preventDefault();
-        keys[" "] = true;
-        keys.Space = true;
-      }
+      if (e.key === " " || e.code === "Space") e.preventDefault();
       if (e.key.toLowerCase() === "p" && running) {
         running = false;
         cancelAnimationFrame(raf);
-      } else if (e.key.toLowerCase() === "p" && !running && ship) {
+      } else if (e.key.toLowerCase() === "p" && !running && ship && lives > 0) {
         running = true;
         last = 0;
         raf = requestAnimationFrame(frame);
@@ -309,22 +412,14 @@
     function onKeyUp(e) {
       keys[e.key] = false;
       keys[e.key.toLowerCase()] = false;
-      if (e.key === " " || e.code === "Space") {
-        keys[" "] = false;
-        keys.Space = false;
-      }
     }
 
     let dragging = false;
     canvas.addEventListener("pointerdown", (e) => {
       dragging = true;
+      canvas.setPointerCapture?.(e.pointerId);
       const r = canvas.getBoundingClientRect();
       if (ship) ship.x = ((e.clientX - r.left) / r.width) * W;
-      if (ship && ship.cool <= 0) {
-        bullets.push({ x: ship.x, y: ship.y - 16, vy: -9.5 });
-        ship.cool = 8;
-        ArcadeSFX?.shoot();
-      }
     });
     canvas.addEventListener("pointermove", (e) => {
       if (!dragging || !ship) return;
@@ -332,6 +427,9 @@
       ship.x = ((e.clientX - r.left) / r.width) * W;
     });
     canvas.addEventListener("pointerup", () => {
+      dragging = false;
+    });
+    canvas.addEventListener("pointercancel", () => {
       dragging = false;
     });
 
@@ -351,6 +449,7 @@
       destroy() {
         running = false;
         cancelAnimationFrame(raf);
+        clearTimeout(hitBannerTimer);
         window.removeEventListener("keydown", onKeyDown);
         window.removeEventListener("keyup", onKeyUp);
         root.innerHTML = "";
