@@ -10,7 +10,7 @@
           <div><span class="hud-label">Wave</span><strong id="sh-wave">1</strong></div>
         </div>
         <canvas id="sh-canvas" width="420" height="520" aria-label="Space shooter"></canvas>
-        <p class="game-hint">← → / A D move · Space / tap to shoot · P pause</p>
+        <p class="game-hint" id="sh-hint">← → / A D · Space / tap shoot · waves get meaner</p>
         <div class="game-actions">
           <button type="button" class="btn primary" id="sh-start">Launch</button>
         </div>
@@ -22,15 +22,29 @@
     const scoreEl = root.querySelector("#sh-score");
     const livesEl = root.querySelector("#sh-lives");
     const waveEl = root.querySelector("#sh-wave");
+    const hintEl = root.querySelector("#sh-hint");
 
     const W = canvas.width;
     const H = canvas.height;
 
-    let ship, bullets, enemies, particles, keys, score, lives, wave, running, raf, last, spawnTimer, submitted;
+    let ship, bullets, eBullets, enemies, particles, keys, score, lives, wave, running, raf, last, spawnTimer, submitted, waveAnnounce;
+
+    function waveMods(w) {
+      return {
+        spawnEvery: Math.max(12, 52 - w * 3.2),
+        enemySpeed: 1.15 + w * 0.28,
+        enemyHp: 1 + Math.floor((w - 1) / 2),
+        zig: w >= 3,
+        shooters: w >= 4,
+        shootRate: Math.max(40, 110 - w * 6),
+        swarm: w >= 6,
+      };
+    }
 
     function init() {
       ship = { x: W / 2, y: H - 48, w: 28, h: 22, cool: 0 };
       bullets = [];
+      eBullets = [];
       enemies = [];
       particles = [];
       keys = {};
@@ -39,20 +53,27 @@
       wave = 1;
       spawnTimer = 0;
       submitted = false;
+      waveAnnounce = 90;
       scoreEl.textContent = "0";
       livesEl.textContent = "3";
       waveEl.textContent = "1";
+      hintEl.textContent = "Wave 1 — warm-up";
     }
 
     function spawnEnemy() {
+      const m = waveMods(wave);
+      const kind = m.shooters && Math.random() < 0.35 ? "shooter" : m.swarm && Math.random() < 0.4 ? "swarm" : "grunt";
       enemies.push({
         x: 30 + Math.random() * (W - 60),
         y: -20,
-        w: 22 + Math.random() * 10,
-        h: 18,
-        vy: 1.2 + wave * 0.25 + Math.random(),
-        hp: 1 + Math.floor(wave / 3),
-        hue: 180 + Math.random() * 80,
+        w: kind === "swarm" ? 14 : 22 + Math.random() * 10,
+        h: kind === "swarm" ? 14 : 18,
+        vy: m.enemySpeed * (kind === "swarm" ? 1.35 : 1) + Math.random() * 0.5,
+        vx: m.zig ? (Math.random() < 0.5 ? -1 : 1) * (0.8 + wave * 0.1) : 0,
+        hp: kind === "shooter" ? m.enemyHp + 1 : m.enemyHp,
+        kind,
+        hue: kind === "shooter" ? 320 : kind === "swarm" ? 45 : 180 + Math.random() * 60,
+        cool: 20 + Math.random() * 40,
       });
     }
 
@@ -85,13 +106,29 @@
       ctx.restore();
     }
 
+    function maybeAdvanceWave() {
+      const threshold = wave * 100 + (wave - 1) * 40;
+      if (score >= threshold) {
+        wave += 1;
+        waveEl.textContent = String(wave);
+        waveAnnounce = 80;
+        ArcadeSFX?.levelUp();
+        const m = waveMods(wave);
+        const bits = [];
+        if (m.zig) bits.push("zigzag");
+        if (m.shooters) bits.push("shooters");
+        if (m.swarm) bits.push("swarm");
+        hintEl.textContent = `Wave ${wave}${bits.length ? " · " + bits.join(" · ") : ""}`;
+      }
+    }
+
     function frame(ts) {
       if (!running) return;
       if (!last) last = ts;
       const dt = Math.min(32, ts - last) / 16.67;
       last = ts;
+      const m = waveMods(wave);
 
-      // bg
       ctx.fillStyle = "#04070e";
       ctx.fillRect(0, 0, W, H);
       for (let i = 0; i < 40; i++) {
@@ -101,28 +138,23 @@
         ctx.fillRect(sx, sy, 1.5, 1.5);
       }
 
-      // input
-      if (keys["ArrowLeft"] || keys["a"]) ship.x -= 5.2 * dt;
-      if (keys["ArrowRight"] || keys["d"]) ship.x += 5.2 * dt;
+      if (keys.ArrowLeft || keys.a) ship.x -= (5.2 + wave * 0.08) * dt;
+      if (keys.ArrowRight || keys.d) ship.x += (5.2 + wave * 0.08) * dt;
       ship.x = Math.max(18, Math.min(W - 18, ship.x));
       if (ship.cool > 0) ship.cool -= dt;
-      if ((keys[" "] || keys["Space"]) && ship.cool <= 0) {
-        bullets.push({ x: ship.x, y: ship.y - 16, vy: -9 });
-        ship.cool = 8;
+      if ((keys[" "] || keys.Space) && ship.cool <= 0) {
+        bullets.push({ x: ship.x, y: ship.y - 16, vy: -9.5 });
+        ship.cool = Math.max(5, 9 - wave * 0.15);
+        ArcadeSFX?.shoot();
       }
 
-      // spawn
       spawnTimer -= dt;
       if (spawnTimer <= 0) {
         spawnEnemy();
-        spawnTimer = Math.max(18, 55 - wave * 3);
-      }
-      if (score > 0 && score >= wave * 120) {
-        wave += 1;
-        waveEl.textContent = String(wave);
+        if (m.swarm && Math.random() < 0.4) spawnEnemy();
+        spawnTimer = m.spawnEvery;
       }
 
-      // bullets
       bullets = bullets.filter((b) => {
         b.y += b.vy * dt;
         ctx.fillStyle = "#fbbf24";
@@ -133,49 +165,69 @@
         return b.y > -10;
       });
 
-      // enemies
+      eBullets = eBullets.filter((b) => {
+        b.y += b.vy * dt;
+        b.x += (b.vx || 0) * dt;
+        ctx.fillStyle = "#fb7185";
+        ctx.fillRect(b.x - 2, b.y, 4, 8);
+        if (Math.abs(b.x - ship.x) < 14 && Math.abs(b.y - ship.y) < 14) {
+          hurt();
+          return false;
+        }
+        return b.y < H + 20;
+      });
+
       enemies = enemies.filter((e) => {
         e.y += e.vy * dt;
+        e.x += e.vx * dt;
+        if (e.x < 16 || e.x > W - 16) e.vx *= -1;
+        e.cool -= dt;
+        if (e.kind === "shooter" && e.cool <= 0 && e.y > 20 && e.y < H * 0.7) {
+          eBullets.push({
+            x: e.x,
+            y: e.y + e.h / 2,
+            vy: 3.2 + wave * 0.15,
+            vx: (ship.x - e.x) * 0.01,
+          });
+          e.cool = m.shootRate;
+          ArcadeSFX?.tick();
+        }
+
         ctx.fillStyle = `hsl(${e.hue} 80% 55%)`;
         ctx.shadowColor = ctx.fillStyle;
         ctx.shadowBlur = 10;
         ctx.fillRect(e.x - e.w / 2, e.y - e.h / 2, e.w, e.h);
         ctx.shadowBlur = 0;
 
-        // hit bullets
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i];
           if (Math.abs(b.x - e.x) < e.w / 2 && Math.abs(b.y - e.y) < e.h / 2) {
             bullets.splice(i, 1);
             e.hp -= 1;
+            ArcadeSFX?.hit();
             if (e.hp <= 0) {
-              score += 10 * wave;
+              score += 10 * wave + (e.kind === "shooter" ? 15 : 0);
               scoreEl.textContent = String(score);
               burst(e.x, e.y, `hsl(${e.hue} 80% 60%)`);
+              ArcadeSFX?.explode();
+              maybeAdvanceWave();
               return false;
             }
           }
         }
 
-        // hit ship
         if (
           Math.abs(e.x - ship.x) < (e.w + ship.w) / 2.4 &&
           Math.abs(e.y - ship.y) < (e.h + ship.h) / 2.4
         ) {
-          lives -= 1;
-          livesEl.textContent = String(lives);
-          burst(ship.x, ship.y, "#fb7185", 16);
-          if (lives <= 0) {
-            endGame();
-            return false;
-          }
+          hurt();
+          burst(e.x, e.y, "#fb7185", 12);
           return false;
         }
 
         return e.y < H + 30;
       });
 
-      // particles
       particles = particles.filter((p) => {
         p.x += p.vx * dt;
         p.y += p.vy * dt;
@@ -188,12 +240,30 @@
       });
 
       drawShip();
+
+      if (waveAnnounce > 0) {
+        waveAnnounce -= dt;
+        ctx.fillStyle = `rgba(45,212,191,${Math.min(1, waveAnnounce / 40)})`;
+        ctx.font = "bold 28px Outfit, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`WAVE ${wave}`, W / 2, H * 0.35);
+      }
+
       raf = requestAnimationFrame(frame);
+    }
+
+    function hurt() {
+      lives -= 1;
+      livesEl.textContent = String(lives);
+      ArcadeSFX?.explode();
+      burst(ship.x, ship.y, "#fb7185", 16);
+      if (lives <= 0) endGame();
     }
 
     function endGame() {
       running = false;
       cancelAnimationFrame(raf);
+      ArcadeSFX?.lose();
       ctx.fillStyle = "rgba(4,7,14,0.72)";
       ctx.fillRect(0, 0, W, H);
       ctx.fillStyle = "#e8eef9";
@@ -202,15 +272,17 @@
       ctx.fillText("Ship Down", W / 2, H / 2 - 10);
       ctx.font = "14px JetBrains Mono, monospace";
       ctx.fillStyle = "#38bdf8";
-      ctx.fillText(`Final score ${score}`, W / 2, H / 2 + 20);
+      ctx.fillText(`Score ${score} · Wave ${wave}`, W / 2, H / 2 + 20);
       if (!submitted && onScore) {
         submitted = true;
-        onScore({ score });
+        onScore({ score, meta: { wave } });
       }
     }
 
     function start() {
       cancelAnimationFrame(raf);
+      ArcadeSFX?.unlock();
+      ArcadeSFX?.click();
       init();
       running = true;
       last = 0;
@@ -243,15 +315,15 @@
       }
     }
 
-    // mobile: tap to shoot, drag to move
     let dragging = false;
     canvas.addEventListener("pointerdown", (e) => {
       dragging = true;
       const r = canvas.getBoundingClientRect();
-      ship.x = ((e.clientX - r.left) / r.width) * W;
-      if (ship.cool <= 0) {
-        bullets.push({ x: ship.x, y: ship.y - 16, vy: -9 });
+      if (ship) ship.x = ((e.clientX - r.left) / r.width) * W;
+      if (ship && ship.cool <= 0) {
+        bullets.push({ x: ship.x, y: ship.y - 16, vy: -9.5 });
         ship.cool = 8;
+        ArcadeSFX?.shoot();
       }
     });
     canvas.addEventListener("pointermove", (e) => {
@@ -273,7 +345,7 @@
     ctx.fillStyle = "#93a4c3";
     ctx.font = "16px Outfit, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Press Launch to begin", W / 2, H / 2);
+    ctx.fillText("Press Launch", W / 2, H / 2);
 
     return {
       destroy() {

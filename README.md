@@ -14,21 +14,11 @@
 This special GitHub profile repo hosts **Alphaeus Arcade**: fun, lightweight games you can play in the browser.
 
 ### Games
-| Game | How you score |
-|------|----------------|
-| **Tic-Tac-Toe** | Wins vs minimax AI · win streaks |
-| **Space Shooter** | Points · waves · lives |
-| **Snake** | Classic points · ramping speed |
-| **Reaction Lab** | Lower milliseconds = better |
-| **Memory Match** | Finish with fewer moves |
+Tic-Tac-Toe · Space Shooter · Snake · Reaction Lab · Memory Match  
+(Sounds, difficulty ramps, explore in the browser.)
 
 ### Scoreboard
-- Player tag, **XP + levels**, personal bests
-- Hall of fame + recent run history
-- Stored in **`localStorage`** (this device)
-- **Export / import** a score code to backup or move machines
-
-> No backend server — pure static site (GitHub Pages friendly).
+Player tag, XP, personal bests, hall of fame — **`localStorage`** + export/import codes.
 
 ### Links
 - 🕹️ **Arcade:** https://alphaeusng.github.io/AlphaeusNg/

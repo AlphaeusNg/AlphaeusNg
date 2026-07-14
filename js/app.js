@@ -250,6 +250,37 @@
     a.href = PORTFOLIO_URL;
   });
 
+  // mute toggle
+  function syncMuteButtons() {
+    const muted = window.ArcadeSFX?.isMuted?.() ?? false;
+    $$(".mute-btn").forEach((btn) => {
+      btn.textContent = muted ? "🔇" : "🔊";
+      btn.setAttribute("aria-pressed", muted ? "true" : "false");
+      btn.title = muted ? "Unmute" : "Mute";
+    });
+  }
+  $$(".mute-btn, #btn-mute, #btn-mute-play").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      window.ArcadeSFX?.toggleMute?.();
+      window.ArcadeSFX?.unlock?.();
+      if (!window.ArcadeSFX?.isMuted?.()) window.ArcadeSFX?.click?.();
+      syncMuteButtons();
+    });
+  });
+  // unlock audio on first interaction
+  const unlockOnce = () => {
+    window.ArcadeSFX?.unlock?.();
+    window.removeEventListener("pointerdown", unlockOnce);
+    window.removeEventListener("keydown", unlockOnce);
+  };
+  window.addEventListener("pointerdown", unlockOnce);
+  window.addEventListener("keydown", unlockOnce);
+  syncMuteButtons();
+
+  $$("[data-game]").forEach((card) => {
+    card.addEventListener("pointerdown", () => window.ArcadeSFX?.click?.());
+  });
+
   window.addEventListener("hashchange", routeFromHash);
   refreshHud();
   routeFromHash();
