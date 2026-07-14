@@ -60,7 +60,9 @@
       placeFood();
       scoreEl.textContent = "0";
       levelEl.textContent = "1";
-      hintEl.textContent = cfg.wrap ? "Edges wrap · eat to level up" : "Solid walls · careful!";
+      hintEl.textContent = cfg.wrap
+        ? "Eat green food · avoid red ✕ spikes"
+        : "Solid walls · eat green · avoid red ✕";
     }
 
     function occupied(x, y) {
@@ -109,17 +111,76 @@
         ctx.lineTo(canvas.width, i * cell);
         ctx.stroke();
       }
-      // hazards
+      // hazards — clear danger tiles (do NOT hit)
+      const pulse = 0.55 + 0.45 * Math.sin(Date.now() / 180);
       hazards.forEach((h) => {
-        ctx.fillStyle = "#7c3aed";
-        ctx.fillRect(h.x * cell + 2, h.y * cell + 2, cell - 4, cell - 4);
+        const x = h.x * cell;
+        const y = h.y * cell;
+        const pad = 1.5;
+        const s = cell - pad * 2;
+
+        // outer danger glow
+        ctx.shadowColor = `rgba(251, 50, 50, ${0.45 + pulse * 0.35})`;
+        ctx.shadowBlur = 10 + pulse * 6;
+        ctx.fillStyle = "#450a0a";
+        ctx.fillRect(x + pad, y + pad, s, s);
+        ctx.shadowBlur = 0;
+
+        // hazard body: red base
+        const g = ctx.createLinearGradient(x, y, x + cell, y + cell);
+        g.addColorStop(0, "#ef4444");
+        g.addColorStop(0.5, "#b91c1c");
+        g.addColorStop(1, "#7f1d1d");
+        ctx.fillStyle = g;
+        ctx.fillRect(x + pad, y + pad, s, s);
+
+        // yellow/black warning stripes
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x + pad, y + pad, s, s);
+        ctx.clip();
+        ctx.strokeStyle = `rgba(250, 204, 21, ${0.55 + pulse * 0.35})`;
+        ctx.lineWidth = 3;
+        for (let d = -cell; d < cell * 2; d += 5) {
+          ctx.beginPath();
+          ctx.moveTo(x + d, y);
+          ctx.lineTo(x + d + cell, y + cell);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // thick red border
+        ctx.strokeStyle = "#fca5a5";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x + pad + 0.5, y + pad + 0.5, s - 1, s - 1);
+
+        // big "✕" so it's obvious: do not touch
+        ctx.fillStyle = "#fff7ed";
+        ctx.font = `bold ${Math.floor(cell * 0.62)}px Outfit, system-ui, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(0,0,0,0.65)";
+        ctx.shadowBlur = 4;
+        ctx.fillText("✕", x + cell / 2, y + cell / 2 + 0.5);
+        ctx.shadowBlur = 0;
       });
-      // food pulse color by level
-      ctx.fillStyle = level % 2 === 0 ? "#fb7185" : "#fbbf24";
-      ctx.shadowColor = ctx.fillStyle;
-      ctx.shadowBlur = 12;
-      ctx.fillRect(food.x * cell + 2, food.y * cell + 2, cell - 4, cell - 4);
+
+      // food — clearly edible (green, not danger-red)
+      const fx = food.x * cell + 3;
+      const fy = food.y * cell + 3;
+      const fs = cell - 6;
+      ctx.shadowColor = "#4ade80";
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = "#22c55e";
+      ctx.fillRect(fx, fy, fs, fs);
       ctx.shadowBlur = 0;
+      ctx.strokeStyle = "#bbf7d0";
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(fx + 0.5, fy + 0.5, fs - 1, fs - 1);
+      ctx.fillStyle = "#ecfdf5";
+      ctx.beginPath();
+      ctx.arc(food.x * cell + cell / 2, food.y * cell + cell / 2, cell * 0.18, 0, Math.PI * 2);
+      ctx.fill();
       snake.forEach((s, i) => {
         ctx.fillStyle = i === 0 ? "#2dd4bf" : `rgba(56,189,248,${1 - (i / snake.length) * 0.6})`;
         ctx.fillRect(s.x * cell + 1, s.y * cell + 1, cell - 2, cell - 2);
@@ -164,8 +225,8 @@
           rebuildHazards(next.hazards);
           levelEl.textContent = String(level);
           hintEl.textContent = next.wrap
-            ? `Level ${level} · edges wrap · ${next.hazards} blocks`
-            : `Level ${level} · SOLID WALLS · ${next.hazards} blocks`;
+            ? `Level ${level} · wrap on · avoid red ✕ spikes (${next.hazards})`
+            : `Level ${level} · solid walls · avoid red ✕ spikes (${next.hazards})`;
           ArcadeSFX?.levelUp();
           clearInterval(timer);
           timer = setInterval(step, tickMs);
