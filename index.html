@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alphaeus Arcade — mini games by Alphaeus Ng</title>
+  <meta name="description" content="Fun browser mini-games with a live scoreboard. Tic-tac-toe, space shooter, snake, reaction lab, memory match. By Alphaeus Ng." />
+  <meta name="theme-color" content="#05080f" />
+  <meta property="og:title" content="Alphaeus Arcade" />
+  <meta property="og:description" content="Play mini-games. Chase high scores. No install." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alphaeusng.github.io/AlphaeusNg/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-mark">A</span>
+      <span>
+        <strong>Alphaeus Arcade</strong>
+        <small>mini games · local scores</small>
+      </span>
+    </a>
+    <nav class="top-nav">
+      <a href="#scores-panel">Scoreboard</a>
+      <a href="https://alphaeusng.github.io/" data-portfolio target="_blank" rel="noopener">Portfolio ↗</a>
+      <a href="https://github.com/AlphaeusNg" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- LOBBY -->
+    <div id="lobby">
+      <section class="hero">
+        <p class="eyebrow">Not a resume — just play</p>
+        <h1>Pick a cabinet.<br /><span class="grad">Beat your best.</span></h1>
+        <p class="lead">
+          Browser mini-games with XP, high scores, and a hall of fame saved on this device.
+          For the serious bio, head to the portfolio.
+        </p>
+        <div class="hero-links">
+          <a class="btn primary" href="#cabinets">Enter arcade</a>
+          <a class="btn ghost" href="https://alphaeusng.github.io/" data-portfolio target="_blank" rel="noopener">
+            Who is Alphaeus? → Portfolio
+          </a>
+        </div>
+      </section>
+
+      <section class="player-bar glass" id="player-bar">
+        <form id="name-form" class="name-form">
+          <label for="name-input">Player tag</label>
+          <div class="name-row">
+            <input id="name-input" type="text" maxlength="16" placeholder="Your name" autocomplete="nickname" />
+            <button type="submit" class="btn small">Save</button>
+          </div>
+        </form>
+        <div class="player-stats">
+          <div>
+            <span class="hud-label">Player</span>
+            <strong id="player-name-display">Player</strong>
+          </div>
+          <div>
+            <span class="hud-label">Level</span>
+            <strong id="level-display">Lv 1</strong>
+          </div>
+          <div>
+            <span class="hud-label">XP</span>
+            <strong id="xp-display">0 XP</strong>
+          </div>
+          <div>
+            <span class="hud-label">Runs</span>
+            <strong id="games-played">0</strong>
+          </div>
+        </div>
+        <div class="xp-track" title="Progress to next level">
+          <div class="xp-fill" id="xp-bar"></div>
+        </div>
+      </section>
+
+      <section class="cabinets" id="cabinets">
+        <h2 class="section-title">Game cabinets</h2>
+        <div class="cabinet-grid">
+          <button type="button" class="cabinet" data-game="tictactoe">
+            <span class="cab-icon">⭕</span>
+            <span class="cab-body">
+              <strong>Tic-Tac-Toe</strong>
+              <span>You vs perfect AI. Stack a win streak.</span>
+            </span>
+            <span class="cab-go">Play →</span>
+          </button>
+          <button type="button" class="cabinet" data-game="shooter">
+            <span class="cab-icon">🚀</span>
+            <span class="cab-body">
+              <strong>Space Shooter</strong>
+              <span>Dodge, blast, survive the waves.</span>
+            </span>
+            <span class="cab-go">Play →</span>
+          </button>
+          <button type="button" class="cabinet" data-game="snake">
+            <span class="cab-icon">🐍</span>
+            <span class="cab-body">
+              <strong>Snake</strong>
+              <span>Classic grid crawl. Don’t bite yourself.</span>
+            </span>
+            <span class="cab-go">Play →</span>
+          </button>
+          <button type="button" class="cabinet" data-game="reaction">
+            <span class="cab-icon">⚡</span>
+            <span class="cab-body">
+              <strong>Reaction Lab</strong>
+              <span>Wait for green. Lower ms wins.</span>
+            </span>
+            <span class="cab-go">Play →</span>
+          </button>
+          <button type="button" class="cabinet" data-game="memory">
+            <span class="cab-icon">🧠</span>
+            <span class="cab-body">
+              <strong>Memory Match</strong>
+              <span>Flip pairs. Fewer moves, higher score.</span>
+            </span>
+            <span class="cab-go">Play →</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="scores glass" id="scores-panel">
+        <div class="scores-head">
+          <h2 class="section-title">Scoreboard</h2>
+          <div class="score-tools">
+            <button type="button" class="btn small ghost" id="btn-export">Export code</button>
+            <button type="button" class="btn small ghost" id="btn-import">Import code</button>
+            <button type="button" class="btn small danger" id="btn-reset">Reset</button>
+          </div>
+        </div>
+        <p class="scores-note">
+          Scores live in your browser (<code>localStorage</code>). Export a code to back them up or move devices.
+          This isn’t a global multiplayer server — it’s your personal arcade cabinet.
+        </p>
+        <div class="scores-grid">
+          <div>
+            <h3>Personal bests</h3>
+            <ul class="hs-list" id="highscores-list"></ul>
+          </div>
+          <div>
+            <h3>Hall of fame</h3>
+            <ul class="hall-list" id="hall-list"></ul>
+          </div>
+          <div class="scores-wide">
+            <h3>Recent runs</h3>
+            <ul class="history-list" id="history-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="bridge glass">
+        <div>
+          <h2>Looking for the real Alphaeus?</h2>
+          <p>
+            This arcade is pure play. Bio, work, faith notes, and CV live on the portfolio site.
+          </p>
+        </div>
+        <a class="btn primary" href="https://alphaeusng.github.io/" data-portfolio target="_blank" rel="noopener">
+          Open portfolio ↗
+        </a>
+      </section>
+    </div>
+
+    <!-- PLAY VIEW -->
+    <div id="play-view" hidden>
+      <div class="play-bar">
+        <button type="button" class="btn ghost" id="btn-back">← Lobby</button>
+        <h2 id="play-title">Game</h2>
+        <a class="btn ghost small" href="https://alphaeusng.github.io/" data-portfolio target="_blank" rel="noopener">Portfolio</a>
+      </div>
+      <div id="game-mount" class="game-mount glass"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>
+      © <span id="year"></span> Alphaeus Ng ·
+      <a href="https://alphaeusng.github.io/" data-portfolio target="_blank" rel="noopener">Portfolio</a> ·
+      <a href="https://github.com/AlphaeusNg/AlphaeusNg" target="_blank" rel="noopener">Source</a>
+    </p>
+  </footer>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/scores.js"></script>
+  <script src="js/games/tictactoe.js"></script>
+  <script src="js/games/snake.js"></script>
+  <script src="js/games/shooter.js"></script>
+  <script src="js/games/reaction.js"></script>
+  <script src="js/games/memory.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
