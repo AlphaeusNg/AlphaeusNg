@@ -10,9 +10,6 @@ Hi there 👋
 
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=AlphaeusNg&layout=compact)](https://github.com/AlphaeusNg/github-readme-stats) -->
 
-![AlphaeusNg's GitHub stats](https://github-readme-stats.vercel.app/api?username=AlphaeusNg&count_private=true&show_icons=true&theme=dark)
-[![LeetCode Stats](https://leetcard.jacoblin.cool/Alphatortoise?theme=dark&font=Averia%20Sans%20Libre)](https://leetcode.com/Alphatortoise)
-
 <!--
 **AlphaeusNg/AlphaeusNg** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
