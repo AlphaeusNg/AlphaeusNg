@@ -19,7 +19,11 @@
 
 ### Stack (selected)
 
-`Python` · `PyTorch` · `OpenCV` · `Streamlit` · `JS` · `Git` · `Linux`
+`Python` · `PyTorch` · `OpenCV` · `Streamlit` · `JavaScript` · `Git` · `Linux`
+
+### Currently
+
+Shipping internal supply-chain AI tools at Panasonic, and polishing open side projects (portfolio, arcade, Scripture study tooling).
 
 ### On this GitHub
 
