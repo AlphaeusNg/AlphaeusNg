@@ -23,9 +23,16 @@
 
 ### On this GitHub
 
-- **[alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io)** — personal site (portfolio, conviction page, vault viewer)
-- **[AlpArcade](https://github.com/AlphaeusNg/AlpArcade)** — zero-build browser arcade with local scoreboard
-- **[Seeking-Biblical-Truth](https://github.com/AlphaeusNg/Seeking-Biblical-Truth)** — structured Scripture study vault + public graph viewer
+| Repo | What |
+|:--|:--|
+| [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, conviction page, vault viewer |
+| [AlpArcade](https://github.com/AlphaeusNg/AlpArcade) | Zero-build browser arcade + local scoreboard |
+| [Seeking-Biblical-Truth](https://github.com/AlphaeusNg/Seeking-Biblical-Truth) | Scripture study vault + public graph viewer |
+
+```text
+Portfolio  →  https://alphaeusng.github.io/
+Arcade     →  https://alphaeusng.github.io/AlpArcade/
+```
 
 ⚡ Fun fact: I once ate ~1kg of salmon at one go.
 
