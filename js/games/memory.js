@@ -56,6 +56,8 @@
     let hp = MAX_HP;
     let gameOver = false;
     let submitted = false;
+    /** Card indices the player has already revealed this level */
+    let seen = new Set();
 
     root.innerHTML = `
       <div class="memory-wrap">
@@ -69,7 +71,7 @@
           <span id="mem-board-size">2×2</span>
         </div>
         <div class="mem-grid" id="mem-grid"></div>
-        <p class="game-hint" id="mem-hint">Match pairs. Wrong flip costs a heart. Board grows to 10×10.</p>
+        <p class="game-hint" id="mem-hint">First peeks are free. Miss a card you've already seen → lose a heart.</p>
         <div class="game-actions">
           <button type="button" class="btn primary" id="mem-restart">New run</button>
         </div>
@@ -123,6 +125,7 @@
       flipped = [];
       lock = false;
       matched = 0;
+      seen = new Set();
 
       levelEl.textContent = String(level);
       matchedEl.textContent = `0 / ${L.pairs} pairs`;
@@ -132,8 +135,8 @@
 
       const atCap = L.pairs >= 50;
       hintEl.textContent = atCap
-        ? `Level ${level} · max board 10×10 · stay sharp`
-        : `Level ${level} · ${L.cols}×${L.rows} · clear to expand`;
+        ? `Level ${level} · 10×10 · free scouting, paid mistakes`
+        : `Level ${level} · ${L.cols}×${L.rows} · new cards free to peek`;
 
       grid.style.gridTemplateColumns = `repeat(${L.cols}, 1fr)`;
       grid.classList.toggle("mem-grid-dense", L.cols >= 8);
@@ -187,6 +190,10 @@
       }
     }
 
+    function markSeen(...indices) {
+      for (const idx of indices) seen.add(idx);
+    }
+
     function flip(i) {
       if (gameOver || lock || cards[i].matched || flipped.includes(i)) return;
       ArcadeSFX?.flip();
@@ -197,13 +204,17 @@
       const [a, b] = flipped;
       const L = layoutForLevel(level);
 
+      // Knowledge *before* this pair is fully committed to memory
+      const knewA = seen.has(a);
+      const knewB = seen.has(b);
+
       if (cards[a].icon === cards[b].icon) {
         cards[a].matched = cards[b].matched = true;
+        markSeen(a, b);
         matched += 1;
         matchedEl.textContent = `${matched} / ${L.pairs} pairs`;
         flipped = [];
         ArcadeSFX?.match();
-        // Small score per match
         totalScore += 10 + level * 2;
         scoreEl.textContent = String(totalScore);
         render();
@@ -212,13 +223,11 @@
           const clearBonus = 40 + L.pairs * 8 + level * 5 + hp * 15;
           totalScore += clearBonus;
           scoreEl.textContent = String(totalScore);
-          // Heal 1 heart on clear (reward clean play), never above max
           if (hp < MAX_HP) {
             hp += 1;
             paintHp();
           }
           ArcadeSFX?.win();
-          // Checkpoint score each clear (run continues infinitely)
           onScore?.({
             score: totalScore,
             meta: { partial: true, level, board: `${L.cols}×${L.rows}` },
@@ -232,14 +241,22 @@
           }, 700);
         }
       } else {
+        // Only punish if the player already knew at least one of these cards
+        const shouldCostHeart = knewA || knewB;
         lock = true;
         setTimeout(() => {
+          markSeen(a, b);
           flipped = [];
           lock = false;
           render();
-          loseHeart();
-          if (!gameOver) {
-            hintEl.textContent = `Miss · ${hp} heart${hp === 1 ? "" : "s"} left`;
+          if (shouldCostHeart) {
+            loseHeart();
+            if (!gameOver) {
+              hintEl.textContent = `Memory miss · ${hp} heart${hp === 1 ? "" : "s"} left`;
+            }
+          } else if (!gameOver) {
+            hintEl.textContent = "Scout peek — no heart lost";
+            ArcadeSFX?.tick?.();
           }
         }, L.flipMs);
       }
