@@ -1,51 +1,87 @@
 (function (global) {
   "use strict";
 
-  const LEVELS = [
-    { pairs: 4, icons: ["🚀", "⭐", "🎮", "🧠"], label: "Lv1 · 4 pairs", flipMs: 700, cols: 4 },
-    { pairs: 6, icons: ["🚀", "⭐", "🎮", "🧠", "⚡", "🐟"], label: "Lv2 · 6 pairs", flipMs: 600, cols: 4 },
-    { pairs: 8, icons: ["🚀", "⭐", "🎮", "🧠", "⚡", "🐟", "🎯", "👾"], label: "Lv3 · 8 pairs", flipMs: 520, cols: 4 },
-    {
-      pairs: 10,
-      icons: ["🚀", "⭐", "🎮", "🧠", "⚡", "🐟", "🎯", "👾", "🪐", "💎"],
-      label: "Lv4 · 10 pairs",
-      flipMs: 420,
-      cols: 5,
-    },
+  // Enough unique faces for a full 10×10 (50 pairs)
+  const ICON_POOL = [
+    "🚀", "⭐", "🎮", "🧠", "⚡", "🐟", "🎯", "👾", "🪐", "💎",
+    "🔥", "❄️", "🌊", "🍀", "🎵", "🎲", "🧩", "🦊", "🐱", "🐶",
+    "🍕", "🍩", "⚽", "🏀", "🎸", "📚", "🔑", "💡", "🌙", "☀️",
+    "🌈", "🎪", "🎨", "🏆", "🎁", "🔔", "🦄", "🐝", "🐢", "🐙",
+    "🍎", "🍇", "🌮", "🧁", "🚁", "🚂", "📷", "💻", "⌚", "🧲",
   ];
 
+  const MAX_SIDE = 10; // 10×10 cap
+  const MAX_HP = 5;
+  const START_PAIRS = 2; // 2×2
+
+  /**
+   * Infinite levels; board grows until 10×10 (50 pairs), then stays maxed
+   * while speed/pressure keep ramping.
+   */
+  function layoutForLevel(level) {
+    const pairs = Math.min(50, START_PAIRS + (level - 1));
+    const cells = pairs * 2;
+    const { cols, rows } = bestGrid(cells);
+    // Flip peek time shortens with level; floor at 280ms
+    const flipMs = Math.max(280, 720 - (level - 1) * 28);
+    return { pairs, cols, rows, flipMs, cells };
+  }
+
+  /** Prefer near-square grids, never exceeding MAX_SIDE on either axis. */
+  function bestGrid(cells) {
+    let best = { cols: cells, rows: 1, score: Infinity };
+    for (let cols = 1; cols <= Math.min(MAX_SIDE, cells); cols++) {
+      if (cells % cols !== 0) continue;
+      const rows = cells / cols;
+      if (rows > MAX_SIDE) continue;
+      const score = Math.abs(cols - rows) + (cols < rows ? 0.1 : 0);
+      if (score < best.score) best = { cols, rows, score };
+    }
+    // Fallback: force into max box (should not hit if cells even ≤ 100)
+    if (best.score === Infinity) {
+      const cols = Math.min(MAX_SIDE, cells);
+      const rows = Math.ceil(cells / cols);
+      return { cols, rows: Math.min(MAX_SIDE, rows) };
+    }
+    return { cols: best.cols, rows: best.rows };
+  }
+
   function mount(root, { onScore }) {
-    let level = 0;
-    let maxOpen = 0;
+    let level = 1;
     let cards = [];
     let flipped = [];
     let lock = false;
-    let moves = 0;
     let matched = 0;
     let totalScore = 0;
-    let submittedFinal = false;
+    let hp = MAX_HP;
+    let gameOver = false;
+    let submitted = false;
 
     root.innerHTML = `
       <div class="memory-wrap">
-        <div class="diff-bar" id="mem-levels"></div>
         <div class="game-hud">
-          <div><span class="hud-label">Moves</span><strong id="mem-moves">0</strong></div>
-          <div><span class="hud-label">Matched</span><strong id="mem-matched">0/4</strong></div>
+          <div><span class="hud-label">Level</span><strong id="mem-level">1</strong></div>
+          <div><span class="hud-label">Health</span><strong id="mem-hp" class="mem-hp" aria-live="polite"></strong></div>
           <div><span class="hud-label">Score</span><strong id="mem-score">0</strong></div>
         </div>
+        <div class="mem-status">
+          <span id="mem-matched">0 / 2 pairs</span>
+          <span id="mem-board-size">2×2</span>
+        </div>
         <div class="mem-grid" id="mem-grid"></div>
-        <p class="game-hint" id="mem-hint">Clear a board to open the next level.</p>
+        <p class="game-hint" id="mem-hint">Match pairs. Wrong flip costs a heart. Board grows to 10×10.</p>
         <div class="game-actions">
-          <button type="button" class="btn primary" id="mem-restart">Restart level</button>
+          <button type="button" class="btn primary" id="mem-restart">New run</button>
         </div>
       </div>
     `;
 
     const grid = root.querySelector("#mem-grid");
-    const movesEl = root.querySelector("#mem-moves");
-    const matchedEl = root.querySelector("#mem-matched");
+    const levelEl = root.querySelector("#mem-level");
+    const hpEl = root.querySelector("#mem-hp");
     const scoreEl = root.querySelector("#mem-score");
-    const levelsEl = root.querySelector("#mem-levels");
+    const matchedEl = root.querySelector("#mem-matched");
+    const boardSizeEl = root.querySelector("#mem-board-size");
     const hintEl = root.querySelector("#mem-hint");
 
     function shuffle(arr) {
@@ -56,39 +92,51 @@
       return arr;
     }
 
-    function paintLevels() {
-      levelsEl.innerHTML = LEVELS.map((l, i) => {
-        const locked = i > maxOpen;
-        return `<button type="button" class="diff-chip${i === level ? " active" : ""}${locked ? " locked" : ""}" data-l="${i}" ${locked ? "disabled" : ""}>${i + 1}</button>`;
-      }).join("");
-      levelsEl.querySelectorAll("[data-l]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const i = Number(btn.dataset.l);
-          if (i > maxOpen) return;
-          level = i;
-          ArcadeSFX?.click();
-          startLevel();
-        });
-      });
+    function paintHp() {
+      const hearts = Array.from({ length: MAX_HP }, (_, i) =>
+        i < hp ? "❤️" : "🖤"
+      ).join("");
+      hpEl.textContent = hearts;
+      hpEl.classList.toggle("low", hp <= 2 && hp > 0);
+      hpEl.classList.toggle("dead", hp <= 0);
+    }
+
+    function startRun() {
+      level = 1;
+      totalScore = 0;
+      hp = MAX_HP;
+      gameOver = false;
+      submitted = false;
+      scoreEl.textContent = "0";
+      startLevel();
     }
 
     function startLevel() {
-      const L = LEVELS[level];
-      cards = shuffle([...L.icons, ...L.icons]).map((icon, i) => ({
+      if (gameOver) return;
+      const L = layoutForLevel(level);
+      const icons = ICON_POOL.slice(0, L.pairs);
+      cards = shuffle([...icons, ...icons]).map((icon, i) => ({
         id: i,
         icon,
         matched: false,
       }));
       flipped = [];
       lock = false;
-      moves = 0;
       matched = 0;
-      movesEl.textContent = "0";
-      matchedEl.textContent = `0/${L.pairs}`;
+
+      levelEl.textContent = String(level);
+      matchedEl.textContent = `0 / ${L.pairs} pairs`;
+      boardSizeEl.textContent = `${L.cols}×${L.rows}`;
       scoreEl.textContent = String(totalScore);
-      hintEl.textContent = L.label;
+      paintHp();
+
+      const atCap = L.pairs >= 50;
+      hintEl.textContent = atCap
+        ? `Level ${level} · max board 10×10 · stay sharp`
+        : `Level ${level} · ${L.cols}×${L.rows} · clear to expand`;
+
       grid.style.gridTemplateColumns = `repeat(${L.cols}, 1fr)`;
-      paintLevels();
+      grid.classList.toggle("mem-grid-dense", L.cols >= 8);
       render();
     }
 
@@ -101,56 +149,87 @@
           "mem-card" +
           (c.matched ? " matched" : "") +
           (flipped.includes(i) || c.matched ? " face-up" : "");
-        btn.innerHTML = `<span class="mem-face">${c.matched || flipped.includes(i) ? c.icon : "?"}</span>`;
-        btn.disabled = c.matched || lock;
+        btn.innerHTML = `<span class="mem-face">${
+          c.matched || flipped.includes(i) ? c.icon : "?"
+        }</span>`;
+        btn.disabled = gameOver || c.matched || lock;
         btn.addEventListener("click", () => flip(i));
         grid.appendChild(btn);
       });
     }
 
+    function loseHeart() {
+      hp = Math.max(0, hp - 1);
+      paintHp();
+      hpEl.classList.remove("hit");
+      void hpEl.offsetWidth;
+      hpEl.classList.add("hit");
+      ArcadeSFX?.hit?.() || ArcadeSFX?.foul?.();
+
+      if (hp <= 0) {
+        endRun();
+      }
+    }
+
+    function endRun() {
+      if (gameOver) return;
+      gameOver = true;
+      lock = true;
+      ArcadeSFX?.lose();
+      hintEl.textContent = `Out of hearts · Level ${level} · ${totalScore} pts`;
+      render();
+      if (!submitted) {
+        submitted = true;
+        onScore?.({
+          score: totalScore,
+          meta: { level, board: boardSizeEl.textContent },
+        });
+      }
+    }
+
     function flip(i) {
-      if (lock || cards[i].matched || flipped.includes(i)) return;
+      if (gameOver || lock || cards[i].matched || flipped.includes(i)) return;
       ArcadeSFX?.flip();
       flipped.push(i);
       render();
       if (flipped.length < 2) return;
 
-      moves += 1;
-      movesEl.textContent = String(moves);
       const [a, b] = flipped;
-      const L = LEVELS[level];
+      const L = layoutForLevel(level);
 
       if (cards[a].icon === cards[b].icon) {
         cards[a].matched = cards[b].matched = true;
         matched += 1;
-        matchedEl.textContent = `${matched}/${L.pairs}`;
+        matchedEl.textContent = `${matched} / ${L.pairs} pairs`;
         flipped = [];
         ArcadeSFX?.match();
+        // Small score per match
+        totalScore += 10 + level * 2;
+        scoreEl.textContent = String(totalScore);
         render();
 
         if (matched === L.pairs) {
-          const levelScore = Math.max(80, 500 - moves * 18 + L.pairs * 35);
-          totalScore += levelScore;
+          const clearBonus = 40 + L.pairs * 8 + level * 5 + hp * 15;
+          totalScore += clearBonus;
           scoreEl.textContent = String(totalScore);
-          ArcadeSFX?.win();
-
-          if (level === LEVELS.length - 1) {
-            hintEl.textContent = `All clear · ${totalScore} pts`;
-            if (!submittedFinal) {
-              submittedFinal = true;
-              onScore?.({ score: totalScore, meta: { moves, level: level + 1 } });
-            }
-          } else {
-            maxOpen = Math.max(maxOpen, level + 1);
-            hintEl.textContent = `+${levelScore} · next level unlocked`;
-            onScore?.({ score: totalScore, meta: { partial: true, level: level + 1 } });
-            setTimeout(() => {
-              level += 1;
-              ArcadeSFX?.levelUp();
-              startLevel();
-            }, 650);
+          // Heal 1 heart on clear (reward clean play), never above max
+          if (hp < MAX_HP) {
+            hp += 1;
+            paintHp();
           }
-          paintLevels();
+          ArcadeSFX?.win();
+          // Checkpoint score each clear (run continues infinitely)
+          onScore?.({
+            score: totalScore,
+            meta: { partial: true, level, board: `${L.cols}×${L.rows}` },
+          });
+          hintEl.textContent = `Cleared! +${clearBonus} · expanding…`;
+          setTimeout(() => {
+            if (gameOver) return;
+            level += 1;
+            ArcadeSFX?.levelUp();
+            startLevel();
+          }, 700);
         }
       } else {
         lock = true;
@@ -158,16 +237,20 @@
           flipped = [];
           lock = false;
           render();
+          loseHeart();
+          if (!gameOver) {
+            hintEl.textContent = `Miss · ${hp} heart${hp === 1 ? "" : "s"} left`;
+          }
         }, L.flipMs);
       }
     }
 
     root.querySelector("#mem-restart").addEventListener("click", () => {
       ArcadeSFX?.click();
-      startLevel();
+      startRun();
     });
 
-    startLevel();
+    startRun();
 
     return {
       destroy() {
