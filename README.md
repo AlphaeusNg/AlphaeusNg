@@ -31,11 +31,15 @@ Shipping internal supply-chain AI tools at Panasonic, and polishing open side pr
 |:--|:--|
 | [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, conviction page, vault viewer |
 | [AlpArcade](https://github.com/AlphaeusNg/AlpArcade) | Zero-build browser arcade + local scoreboard |
+| [ChristoDay](https://github.com/AlphaeusNg/ChristoDay) | Christ-centered weekday gospel reading plan |
+| [CardFitSG](https://github.com/AlphaeusNg/CardFitSG) | Singapore fuss-free cashback card fit calculator |
 | [Seeking-Biblical-Truth](https://github.com/AlphaeusNg/Seeking-Biblical-Truth) | Scripture study vault + public graph viewer |
 
 ```text
 Portfolio  →  https://alphaeusng.github.io/
 Arcade     →  https://alphaeusng.github.io/AlpArcade/
+ChristoDay →  https://alphaeusng.github.io/ChristoDay/
+CardFitSG  →  https://alphaeusng.github.io/CardFitSG/
 ```
 
 ⚡ Fun fact: I once ate ~1kg of salmon at one go.
