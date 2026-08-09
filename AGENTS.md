@@ -23,6 +23,7 @@ README.md    # Only meaningful file for profile content
   - Portfolio: https://alphaeusng.github.io/
   - Arcade: https://alphaeusng.github.io/AlpArcade/
   - VerseKeep: https://alphaeusng.github.io/VerseKeep/
+  - LinkedIn: https://www.linkedin.com/in/alphaeus-ng
 - Avoid large binaries or project source here.
 
 ## Commands
