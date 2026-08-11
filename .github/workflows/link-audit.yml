@@ -1,19 +1,19 @@
-name: ci
+name: link-audit
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: profile-link-audit
   cancel-in-progress: true
 
 jobs:
-  test:
+  audit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -21,7 +21,9 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: "24"
-      - name: Verify profile
-        run: node tools/test-profile.mjs
-      - name: Verify link-audit contracts
+      - name: Verify audit contracts
         run: node tools/test-link-audit.mjs
+      - name: Probe public profile links
+        run: node tools/audit-links.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

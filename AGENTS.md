@@ -35,6 +35,8 @@ tools/       # Zero-dependency profile contract
 cd /home/alph/projects/AlphaeusNg
 # Preview: open README.md in editor / GitHub
 node tools/test-profile.mjs
+node tools/test-link-audit.mjs
+node tools/audit-links.mjs  # live network audit; not part of push CI
 git status
 ```
 

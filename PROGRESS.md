@@ -1,67 +1,79 @@
 # GitHub profile continuous improvement log
 
-Last updated: 2026-08-11 (workspace Cycle 101; profile Cycle 1)
+Last updated: 2026-08-11 (workspace Cycle 111; profile Cycle 2)
 
 ## Current state
 
 - `main` was clean and aligned with `origin/main` at cycle start.
 - The README features nine public repositories with their canonical GitHub and
   hosted URLs; the car classifier honestly has no public hosted app.
-- `node tools/test-profile.mjs` enforces 61 identity, contact, project-map,
-  secure-link, and CI policy assertions.
-- GitHub Actions runs the zero-dependency profile contract on Node 24 with
-  read-only contents access, stale-run cancellation, and a five-minute timeout.
+- `node tools/test-profile.mjs` enforces 77 identity, contact, project-map, CI,
+  and scheduled-audit policy assertions; 15 isolated link-audit contracts cover
+  extraction, endpoint policy, redirects, retries, and diagnostics.
+- Push/PR CI stays zero-network. A separate read-only Node 24 workflow probes 18
+  unique public links weekly and on manual dispatch with a five-minute bound.
 
-## Latest cycle: make the public project map verifiable
+## Latest cycle: audit public links without destabilizing push CI
 
 ### Why this was selected
 
-The profile had no executable checks. Every repository/live mapping and stable
-contact link could drift silently during manual edits, even though the profile
-is the public directory for the workspace. Direct probes found all 18 project
-site/repository URLs healthy; LinkedIn returned its expected automated-client
-block rather than a profile content error.
+The deterministic project-map contract proved README content but could not
+detect a repository disappearing or a deployed site becoming unavailable.
+Putting network probes on every push would trade that gap for third-party
+flakiness, especially because LinkedIn deliberately blocks automated clients.
 
 ### Changes
 
-- Added a zero-dependency Node contract for identity/contact anchors, HTTPS-only
-  Markdown links, all nine featured project rows, canonical repo/live pairs,
-  uniqueness, and the explicit no-live-app marker.
-- Added a least-privilege Node 24 workflow and made its triggers, bounds,
-  supported action majors, and command part of the same executable contract.
-- Documented the local check in `AGENTS.md`.
+- Added a zero-dependency auditor that extracts and deduplicates README HTTPS
+  links, probes them in parallel, applies 10-second per-attempt timeouts, and
+  retries network, 429, and 5xx failures up to three attempts.
+- Repository links use the authenticated GitHub API and require 200; Pages and
+  other public URLs require direct 200 without redirect; only the canonical
+  LinkedIn profile accepts its known 999 automation response as well as 200.
+- Added 15 network-free contracts for extraction, token isolation, endpoint and
+  status policies, retry bounds, redirect diagnostics, and stable errors.
+- Added a separate Monday 03:17 UTC/manual live-audit workflow with read-only
+  permissions, stale-run cancellation, Node 24, and a five-minute timeout.
+- Kept live probes out of push/PR CI while adding the deterministic audit suite;
+  expanded the profile/workflow contract from 61 to 77 assertions.
+- Documented deterministic and live commands in `AGENTS.md`.
 
 ### Verification and scores
 
-- Test-first: the contract failed because the repository had no CI workflow.
-- `node tools/test-profile.mjs`: 61 assertions passed.
-- `node --check tools/test-profile.mjs` and `git diff --check`: passed.
-- Direct live probes: 18 project/GitHub URLs returned HTTP 200; LinkedIn returned
-  its bot-protection status 999 and remains the documented canonical URL.
-- Correctness/reliability: 9/10 (canonical featured mappings are executable).
-- Verifiability: 10/10 (the public profile and its CI policy gate every change).
-- Maintainability: 9/10 (new project rows require one obvious expected mapping).
-- Performance: 10/10 (local check is filesystem-only and near-instant).
-- Security/robustness: 9/10 (read-only CI and insecure Markdown links are
-  enforced without flaky network calls).
+- Test-first: the profile contract failed because push CI did not run link-audit
+  contracts and no separate scheduled workflow existed.
+- `node tools/test-profile.mjs`: 77 assertions passed.
+- `node tools/test-link-audit.mjs`: 15 assertions passed.
+- `node tools/audit-links.mjs`: all 18 unique links passed in 3.1 seconds; 17
+  GitHub API/Pages targets returned 200 and LinkedIn returned accepted 999.
+- Recursive tool syntax and `git diff --check`: passed.
+- Correctness/reliability: 9/10 (canonical status/redirect behavior is explicit).
+- Verifiability: 10/10 (content and external availability now have separate,
+  appropriately timed gates).
+- Maintainability: 9/10 (one policy function owns endpoint/status assumptions).
+- Performance: 9/10 (parallel weekly probes completed in 3.1 seconds; retry and
+  workflow bounds cap bad-network cost).
+- Security/robustness: 10/10 (the scoped token is sent only to `api.github.com`;
+  both workflows are read-only and push CI remains network-free).
 
 ### Lessons and process improvements
 
-- A content-only repository still benefits from contracts when it is a public
-  index into many independently deployed projects.
-- Keep hosted CI deterministic; perform live URL probes during improvement
-  audits rather than making every push depend on third-party bot policies.
-- Test the verification workflow itself so a missing trigger, weakened
-  permission, or stale runtime cannot silently disable the content contract.
+- Reliability policies should distinguish canonical redirects, retriable
+  availability failures, and deliberate bot responses instead of treating every
+  non-200 alike.
+- Test network policy with injected fetch responses; reserve real probes for a
+  scheduled/manual gate so ordinary content work stays deterministic.
+- Never attach a workflow token to arbitrary README URLs. Rewrite only known
+  GitHub repository links to the API and isolate authorization there.
 
 ## Opportunity backlog
 
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
-| 1 | Add a bounded periodic live-link audit with explicit bot-status policy | Verification | Medium | Small / medium | LinkedIn blocks automation; push CI must remain deterministic |
-| 2 | Reconcile profile stack/focus copy when the portfolio résumé changes | Documentation | Medium | Small / low | Requires an authoritative résumé change, not inference |
+| 1 | Reconcile profile stack/focus copy when the portfolio résumé changes | Documentation | Medium | Small / low | Requires an authoritative résumé change, not inference |
+| — | Add a bounded periodic live-link audit with explicit bot-status policy | Verification | Medium | Small / medium | 18 parallel probes plus 15 deterministic policy contracts | Completed in Cycle 2 |
 
 ## Next cycle
 
-Workspace next: rotate to VerseKeep. Profile next: design a non-flaky scheduled
-live-link audit that distinguishes outages, redirects, and deliberate bot blocks.
+Workspace next: rotate to VerseKeep. Profile next: reconcile stack/focus copy
+only when an authoritative portfolio résumé change provides new evidence.

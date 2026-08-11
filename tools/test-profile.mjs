@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -69,5 +69,33 @@ check(/uses:\s*actions\/checkout@v7/.test(workflow), "CI uses checkout v7");
 check(/uses:\s*actions\/setup-node@v7/.test(workflow), "CI uses setup-node v7");
 check(/node-version:\s*["']24["']/.test(workflow), "CI uses Node 24 LTS");
 check(/run:\s*node tools\/test-profile\.mjs/.test(workflow), "CI runs the profile contract");
+check(
+  /run:\s*node tools\/test-link-audit\.mjs/.test(workflow),
+  "push CI runs deterministic link-audit contracts",
+);
+
+const auditWorkflowPath = join(root, ".github/workflows/link-audit.yml");
+check(existsSync(auditWorkflowPath), "profile has a separate live-link workflow");
+const auditWorkflow = readFileSync(auditWorkflowPath, "utf8");
+check(/^name:\s*link-audit\s*$/m.test(auditWorkflow), "link audit has a stable name");
+check(/schedule:\s*\n\s+- cron:\s*["']17 3 \* \* 1["']/.test(auditWorkflow), "link audit runs weekly");
+check(/^\s{2}workflow_dispatch:\s*$/m.test(auditWorkflow), "link audit supports manual runs");
+check(!/^\s{2}(?:push|pull_request):/m.test(auditWorkflow), "live probes never run on push or pull request");
+check(/permissions:\s*\n\s+contents:\s*read/.test(auditWorkflow), "link audit has read-only repository access");
+check(/concurrency:[\s\S]*cancel-in-progress:\s*true/.test(auditWorkflow), "link audit cancels stale runs");
+check(/timeout-minutes:\s*5/.test(auditWorkflow), "link audit has a bounded timeout");
+check(/uses:\s*actions\/checkout@v7/.test(auditWorkflow), "link audit uses checkout v7");
+check(/uses:\s*actions\/setup-node@v7/.test(auditWorkflow), "link audit uses setup-node v7");
+check(/node-version:\s*["']24["']/.test(auditWorkflow), "link audit uses Node 24 LTS");
+check(/run:\s*node tools\/test-link-audit\.mjs/.test(auditWorkflow), "scheduled audit verifies deterministic contracts first");
+check(/run:\s*node tools\/audit-links\.mjs/.test(auditWorkflow), "scheduled audit runs live probes");
+check(
+  auditWorkflow.indexOf("test-link-audit.mjs") < auditWorkflow.indexOf("audit-links.mjs"),
+  "scheduled audit runs contracts before network probes",
+);
+check(
+  /GITHUB_TOKEN:\s*\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}/.test(auditWorkflow),
+  "scheduled GitHub API probes use the scoped workflow token",
+);
 
 console.log(`test-profile.mjs: ${assertions} profile and CI policy assertions passed`);
