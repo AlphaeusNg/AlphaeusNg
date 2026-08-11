@@ -13,6 +13,9 @@ Short public bio, links to portfolio / arcade / socials, and a table of featured
 
 ```text
 README.md    # Only meaningful file for profile content
+PROGRESS.md  # Continuous-improvement state and backlog
+tools/       # Zero-dependency profile contract
+.github/     # Read-only CI for the profile contract
 ```
 
 ## Conventions
@@ -31,6 +34,7 @@ README.md    # Only meaningful file for profile content
 ```bash
 cd /home/alph/projects/AlphaeusNg
 # Preview: open README.md in editor / GitHub
+node tools/test-profile.mjs
 git status
 ```
 
