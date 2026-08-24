@@ -41,6 +41,9 @@ profile discovery surfaces linked only to the browser app.
   from 18; the new Releases URL returned direct HTTP 200 and LinkedIn retained
   its explicit accepted 999 automation response.
 - Recursive JavaScript syntax and `git diff --check` passed.
+- Hosted CI run `32777127778` passed both deterministic suites in 14 seconds;
+  the repository Pages run `32777126326` also completed. The raw public README
+  exposes both new package-discovery links.
 - Correctness/documentation: 6/10 → 10/10; verifiability: 8/10 → 10/10;
   maintainability: 9/10 → 9/10; user experience/discoverability: 4/10 → 9/10;
   security/robustness: 10/10 → 10/10 (the workflow token still reaches only
