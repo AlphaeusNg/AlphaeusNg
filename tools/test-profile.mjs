@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readme = readFileSync(join(root, "README.md"), "utf8");
 const workflow = readFileSync(join(root, ".github/workflows/ci.yml"), "utf8");
+const ailyPackagesUrl = "https://github.com/AlphaeusNg/AIly/releases";
 let assertions = 0;
 
 function check(condition, message) {
@@ -21,6 +22,11 @@ check(
 );
 check(readme.includes("mailto:alphaolivegreen@gmail.com"), "profile keeps the public email link");
 check(!/\]\(http:\/\//.test(readme), "Markdown links do not use insecure HTTP");
+const quickLinks = readme.split("### Focus")[0] || "";
+check(
+  quickLinks.includes(`Windows / Android downloads](${ailyPackagesUrl})`),
+  "AIly quick links expose the tested Windows and Android packages",
+);
 
 const expectedProjects = new Map([
   ["alphaeusng.github.io", ["https://github.com/AlphaeusNg/alphaeusng.github.io", "https://alphaeusng.github.io/"]],
@@ -58,6 +64,11 @@ for (const [, label, repoUrl, liveCell] of rows) {
 for (const label of expectedProjects.keys()) {
   check(seen.has(label), `featured table includes ${label}`);
 }
+const ailyRow = rows.find(([, label]) => label === "AIly");
+check(
+  ailyRow?.[3].includes(`Packages](${ailyPackagesUrl})`),
+  "AIly project row keeps a stable package-discovery link",
+);
 
 check(/^name:\s*ci\s*$/m.test(workflow), "CI has a stable name");
 check(/push:\s*\n\s+branches:\s*\[main\]/.test(workflow), "CI runs on main pushes");

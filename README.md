@@ -5,7 +5,7 @@
 | | |
 |:--|:--|
 | 🌐 **Portfolio** | [alphaeusng.github.io](https://alphaeusng.github.io/) — work, story, CV |
-| 🤖 **AIly** | [alphaeusng.github.io/AIly](https://alphaeusng.github.io/AIly/) — privacy-first, local-first AI productivity ally |
+| 🤖 **AIly** | [Web app](https://alphaeusng.github.io/AIly/) · [Windows / Android downloads](https://github.com/AlphaeusNg/AIly/releases) — privacy-first, local-first productivity ally |
 | 📚 **KoboForge** | [alphaeusng.github.io/KoboForge](https://alphaeusng.github.io/KoboForge/) — local-first EPUB conversion for Kobo |
 | 🕹️ **Arcade** | [alphaeusng.github.io/AlpArcade](https://alphaeusng.github.io/AlpArcade/) — mini-games |
 | 📫 **Email** | [alphaolivegreen@gmail.com](mailto:alphaolivegreen@gmail.com) |
@@ -30,7 +30,7 @@ Shipping internal supply-chain AI tools at Panasonic, and polishing AIly, local-
 | Repo | What | Live |
 |:--|:--|:--|
 | [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, conviction page, vault viewer | [Site](https://alphaeusng.github.io/) |
-| [AIly](https://github.com/AlphaeusNg/AIly) | Local-first AI productivity ally for targets, tutorials, usage, and blocks | [App](https://alphaeusng.github.io/AIly/) |
+| [AIly](https://github.com/AlphaeusNg/AIly) | Local-first AI productivity ally for targets, tutorials, usage, and blocks | [App](https://alphaeusng.github.io/AIly/) · [Packages](https://github.com/AlphaeusNg/AIly/releases) |
 | [KoboForge](https://github.com/AlphaeusNg/KoboForge) | Local-first EPUB converter and Kobo editor | [App](https://alphaeusng.github.io/KoboForge/) |
 | [AlpArcade](https://github.com/AlphaeusNg/AlpArcade) | Zero-build browser arcade with optional cloud scores | [Play](https://alphaeusng.github.io/AlpArcade/) |
 | [VerseKeep](https://github.com/AlphaeusNg/VerseKeep) | Scripture memory games, worship music, and wallpapers | [Play](https://alphaeusng.github.io/VerseKeep/) |
