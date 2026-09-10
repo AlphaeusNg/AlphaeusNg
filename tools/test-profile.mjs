@@ -43,12 +43,12 @@ const expectedProjects = new Map([
 const section = readme.split("### On this GitHub")[1]?.split("⚡ Fun fact:")[0] || "";
 const rows = section
   .split("\n")
-  .map((line) => /^\| \[([^\]]+)\]\(([^)]+)\) \| [^|]+ \| (.+) \|$/.exec(line))
+  .map((line) => /^\| \[([^\]]+)\]\(([^)]+)\) \| ([^|]+) \| (.+) \|$/.exec(line))
   .filter(Boolean);
 check(rows.length === expectedProjects.size, "featured table has every expected project exactly once");
 
 const seen = new Set();
-for (const [, label, repoUrl, liveCell] of rows) {
+for (const [, label, repoUrl, , liveCell] of rows) {
   check(!seen.has(label), `featured project ${label} is not duplicated`);
   seen.add(label);
   const expected = expectedProjects.get(label);
@@ -64,10 +64,28 @@ for (const [, label, repoUrl, liveCell] of rows) {
 for (const label of expectedProjects.keys()) {
   check(seen.has(label), `featured table includes ${label}`);
 }
+function featuredWhat(label) {
+  return (rows.find(([, name]) => name === label)?.[3] || "").trim();
+}
 const ailyRow = rows.find(([, label]) => label === "AIly");
 check(
-  ailyRow?.[3].includes(`Packages](${ailyPackagesUrl})`),
+  ailyRow?.[4].includes(`Packages](${ailyPackagesUrl})`),
   "AIly project row keeps a stable package-discovery link",
+);
+check(
+  /PWA/.test(featuredWhat("AIly")) &&
+    /unsigned Windows\/Android 0\.1\.4/.test(featuredWhat("AIly")) &&
+    !/signed store|Play Store|App Store|OS hard-block/i.test(featuredWhat("AIly")),
+  "AIly table one-liner names the PWA plus unsigned Windows/Android 0.1.4 dogfood",
+);
+check(
+  /local recovery draft/i.test(featuredWhat("KoboForge")),
+  "KoboForge table one-liner names the local recovery draft",
+);
+check(
+  /offline shell/i.test(featuredWhat("VerseKeep")) &&
+    /bundled catalog/i.test(featuredWhat("VerseKeep")),
+  "VerseKeep table one-liner names the offline shell and bundled catalog",
 );
 
 check(/^name:\s*ci\s*$/m.test(workflow), "CI has a stable name");

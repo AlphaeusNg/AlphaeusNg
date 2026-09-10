@@ -30,10 +30,10 @@ Shipping internal supply-chain AI tools at Panasonic, and polishing AIly 0.1.4 (
 | Repo | What | Live |
 |:--|:--|:--|
 | [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, conviction page, vault viewer | [Site](https://alphaeusng.github.io/) |
-| [AIly](https://github.com/AlphaeusNg/AIly) | Local-first AI productivity ally for targets, tutorials, usage, and blocks | [App](https://alphaeusng.github.io/AIly/) · [Packages](https://github.com/AlphaeusNg/AIly/releases) |
-| [KoboForge](https://github.com/AlphaeusNg/KoboForge) | Local-first EPUB converter and Kobo editor | [App](https://alphaeusng.github.io/KoboForge/) |
+| [AIly](https://github.com/AlphaeusNg/AIly) | Local-first PWA plus unsigned Windows/Android 0.1.4 dogfood for targets, tutorials, usage, and blocks | [App](https://alphaeusng.github.io/AIly/) · [Packages](https://github.com/AlphaeusNg/AIly/releases) |
+| [KoboForge](https://github.com/AlphaeusNg/KoboForge) | Local-first EPUB converter and Kobo editor with a local recovery draft | [App](https://alphaeusng.github.io/KoboForge/) |
 | [AlpArcade](https://github.com/AlphaeusNg/AlpArcade) | Zero-build browser arcade with optional cloud scores | [Play](https://alphaeusng.github.io/AlpArcade/) |
-| [VerseKeep](https://github.com/AlphaeusNg/VerseKeep) | Scripture memory games, worship music, and wallpapers | [Play](https://alphaeusng.github.io/VerseKeep/) |
+| [VerseKeep](https://github.com/AlphaeusNg/VerseKeep) | Scripture memory games with an offline shell and bundled catalog | [Play](https://alphaeusng.github.io/VerseKeep/) |
 | [ChristoDay](https://github.com/AlphaeusNg/ChristoDay) | Christ-centered weekday gospel reading plan | [Read](https://alphaeusng.github.io/ChristoDay/) |
 | [CardFitSG](https://github.com/AlphaeusNg/CardFitSG) | Singapore fuss-free cashback card fit calculator | [Compare](https://alphaeusng.github.io/CardFitSG/) |
 | [Seeking-Biblical-Truth](https://github.com/AlphaeusNg/Seeking-Biblical-Truth) | Scripture study vault and public graph viewer | [Explore](https://alphaeusng.github.io/pages/seeking-biblical-truth/) |

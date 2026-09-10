@@ -1,17 +1,49 @@
 # GitHub profile continuous improvement log
 
-Last updated: 2026-09-11 (profile Cycle 4)
+Last updated: 2026-09-11 (profile Cycle 5)
 
 ## Current state
 
 - `main` was clean and aligned with `origin/main` at cycle start.
 - The README features nine public repositories with their canonical GitHub and
   hosted URLs; the car classifier honestly has no public hosted app.
-- `node tools/test-profile.mjs` enforces 79 identity, contact, project-map, CI,
+- Featured one-liners now match shipped 2026-09-11 capabilities: AIly PWA plus
+  unsigned Windows/Android 0.1.4 dogfood, KoboForge local recovery draft, and
+  VerseKeep offline shell with bundled catalog.
+- `node tools/test-profile.mjs` enforces 82 identity, contact, project-map, CI,
   and scheduled-audit policy assertions; 15 isolated link-audit contracts cover
   extraction, endpoint policy, redirects, retries, and diagnostics.
 - Push/PR CI stays zero-network. A separate read-only Node 24 workflow probes 19
   unique public links weekly and on manual dispatch with a five-minute bound.
+
+## Latest cycle: align featured-table one-liners with shipped capabilities
+
+### Why this was selected
+
+Cycle 4 named AIly 0.1.4 in Currently, but the featured table still described
+AIly, KoboForge, and VerseKeep at older capability levels after those products
+shipped a PWA plus unsigned packages, a private local recovery draft, and an
+offline application shell.
+
+### Changes
+
+- AIly one-liner now names the PWA plus unsigned Windows/Android 0.1.4 dogfood
+  without implying signed-store distribution or OS hard-blocks.
+- KoboForge one-liner now names the local recovery draft.
+- VerseKeep one-liner now names the offline shell and bundled catalog without
+  claiming live Bible, streaming music, or remote wallpapers work offline.
+- Left the car classifier live cell as `—` (no public hosted app).
+- Added three deterministic one-liner assertions so future copy cannot drop
+  those shipped capabilities or overclaim AIly store/OS blocking.
+
+### Verification
+
+- Test-first: the profile contract failed on the old AIly table one-liner before
+  the README change.
+- `node tools/test-profile.mjs`: 82 assertions passed, up from 79.
+- `node tools/test-link-audit.mjs`: all 15 network-policy contracts passed.
+- `node tools/audit-links.mjs`: all 19 unique links passed; LinkedIn retained
+  its explicit accepted 999 automation response.
 
 ## Latest cycle: name the current AIly dogfood packages
 
@@ -129,6 +161,7 @@ flakiness, especially because LinkedIn deliberately blocks automated clients.
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Reconcile profile stack/focus copy when the portfolio résumé changes | Documentation | Medium | Small / low | Requires an authoritative résumé change, not inference |
+| — | Align featured-table one-liners with shipped AIly/KoboForge/VerseKeep capabilities | Documentation | Medium | Tiny / low | Three one-liner assertions; car classifier stays unhosted | Completed in Cycle 5 |
 | — | Expose tested AIly Windows/Android packages | Documentation / discoverability | Medium | Tiny / low | Two profile assertions plus a direct-200 live Releases probe | Completed in Cycle 3 |
 | — | Add a bounded periodic live-link audit with explicit bot-status policy | Verification | Medium | Small / medium | 18 parallel probes plus 15 deterministic policy contracts | Completed in Cycle 2 |
 
