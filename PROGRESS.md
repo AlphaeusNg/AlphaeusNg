@@ -1,6 +1,6 @@
 # GitHub profile continuous improvement log
 
-Last updated: 2026-08-25 (profile Cycle 3)
+Last updated: 2026-09-11 (profile Cycle 4)
 
 ## Current state
 
@@ -12,6 +12,21 @@ Last updated: 2026-08-25 (profile Cycle 3)
   extraction, endpoint policy, redirects, retries, and diagnostics.
 - Push/PR CI stays zero-network. A separate read-only Node 24 workflow probes 19
   unique public links weekly and on manual dispatch with a five-minute bound.
+
+## Latest cycle: name the current AIly dogfood packages
+
+### Why this was selected
+
+The Currently line still described AIly generically after `0.1.4` published
+unsigned Windows and Android packages.
+
+### Changes
+
+- Mention AIly 0.1.4 PWA plus unsigned Windows/Android dogfood in Currently.
+
+### Verification
+
+- `node tools/test-profile.mjs` 79 assertions passed.
 
 ## Latest cycle: expose AIly's tested install packages
 

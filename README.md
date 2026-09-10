@@ -23,7 +23,7 @@
 
 ### Currently
 
-Shipping internal supply-chain AI tools at Panasonic, and polishing AIly, local-first web tools, and Scripture study products.
+Shipping internal supply-chain AI tools at Panasonic, and polishing AIly 0.1.4 (PWA + unsigned Windows/Android dogfood), local-first web tools, and Scripture study products.
 
 ### On this GitHub
 
