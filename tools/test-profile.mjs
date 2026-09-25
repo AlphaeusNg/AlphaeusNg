@@ -67,6 +67,30 @@ for (const label of expectedProjects.keys()) {
 function featuredWhat(label) {
   return (rows.find(([, name]) => name === label)?.[3] || "").trim();
 }
+const lead = readme.split("### Focus")[0];
+for (const name of ["AIly", "KoboForge", "Car-Type-Classification-Service"]) {
+  check(lead.includes(`[${name}]`), `first screen introduces ${name}`);
+}
+for (const name of ["AlpArcade", "VerseKeep", "ChristoDay", "CardFitSG", "Seeking-Biblical-Truth"]) {
+  check(!lead.includes(name), `first screen leaves ${name} to the repository directory`);
+}
+check(
+  /PWA/.test(lead) && /unsigned/.test(lead) && lead.includes(`Windows / Android downloads](${ailyPackagesUrl})`),
+  "first screen describes AIly's PWA and unsigned package downloads",
+);
+check(
+  /local recovery draft/i.test(lead),
+  "first screen keeps KoboForge's shipped local recovery draft",
+);
+check(
+  /EfficientNetV2-S/.test(lead) && /ResNet50/.test(lead) && /notebook/i.test(lead),
+  "first screen distinguishes the car classifier serving model from the notebook",
+);
+check(
+  (readme.match(/\b\d+\.\d+\.\d+\b/g) || []).length <= 1,
+  "a package version is mentioned at most once; Releases stays the stable pointer",
+);
+
 const ailyRow = rows.find(([, label]) => label === "AIly");
 check(
   ailyRow?.[4].includes(`Packages](${ailyPackagesUrl})`),
@@ -74,19 +98,41 @@ check(
 );
 check(
   /PWA/.test(featuredWhat("AIly")) &&
-    /unsigned Windows\/Android 0\.1\.4/.test(featuredWhat("AIly")) &&
+    /unsigned Windows\/Android/.test(featuredWhat("AIly")) &&
+    !/\b\d+\.\d+\.\d+\b/.test(featuredWhat("AIly")) &&
     !/signed store|Play Store|App Store|OS hard-block/i.test(featuredWhat("AIly")),
-  "AIly table one-liner names the PWA plus unsigned Windows/Android 0.1.4 dogfood",
+  "AIly table one-liner names the PWA plus unsigned Windows/Android dogfood without a hardcoded release",
 );
 check(
   /local recovery draft/i.test(featuredWhat("KoboForge")),
   "KoboForge table one-liner names the local recovery draft",
 );
 check(
-  /offline shell/i.test(featuredWhat("VerseKeep")) &&
-    /bundled catalog/i.test(featuredWhat("VerseKeep")),
-  "VerseKeep table one-liner names the offline shell and bundled catalog",
+  /meditation/i.test(featuredWhat("VerseKeep")) &&
+    /memory drill/i.test(featuredWhat("VerseKeep")) &&
+    /offline shell/i.test(featuredWhat("VerseKeep")) &&
+    /bundled catalog/i.test(featuredWhat("VerseKeep")) &&
+    !/live Bible|streaming music|remote wallpaper/i.test(featuredWhat("VerseKeep")),
+  "VerseKeep one-liner is meditation-first and keeps the offline shell without overclaiming",
 );
+const portfolioLive = rows.find(([, label]) => label === "alphaeusng.github.io")?.[4] || "";
+check(
+  /DCA Lab/.test(featuredWhat("alphaeusng.github.io")),
+  "portfolio row mentions the shipped DCA Lab",
+);
+check(
+  portfolioLive.includes("(https://alphaeusng.github.io/pages/dca-calculator.html)"),
+  "portfolio row links the DCA calculator",
+);
+const carWhat = featuredWhat("Car-Type-Classification-Service");
+check(
+  /EfficientNetV2-S/.test(carWhat) &&
+    /serving model/.test(carWhat) &&
+    /ResNet50/.test(carWhat) &&
+    /notebook/.test(carWhat),
+  "car classifier one-liner distinguishes EfficientNetV2-S serving from the ResNet50 notebook",
+);
+check(!readme.includes("FastAPI + ResNet50"), "profile no longer presents ResNet50 as the unqualified serving stack");
 
 check(/^name:\s*ci\s*$/m.test(workflow), "CI has a stable name");
 check(/push:\s*\n\s+branches:\s*\[main\]/.test(workflow), "CI runs on main pushes");

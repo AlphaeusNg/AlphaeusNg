@@ -1,22 +1,55 @@
 # GitHub profile continuous improvement log
 
-Last updated: 2026-09-11 (profile Cycle 5)
+Last updated: 2026-09-25 (profile backlog PROFILE-01–05)
 
 ## Current state
 
-- `main` was clean and aligned with `origin/main` at cycle start.
-- The README features nine public repositories with their canonical GitHub and
-  hosted URLs; the car classifier honestly has no public hosted app.
-- Featured one-liners now match shipped 2026-09-11 capabilities: AIly PWA plus
-  unsigned Windows/Android 0.1.4 dogfood, KoboForge local recovery draft, and
-  VerseKeep offline shell with bundled catalog.
-- `node tools/test-profile.mjs` enforces 82 identity, contact, project-map, CI,
-  and scheduled-audit policy assertions; 15 isolated link-audit contracts cover
-  extraction, endpoint policy, redirects, retries, and diagnostics.
-- Push/PR CI stays zero-network. A separate read-only Node 24 workflow probes 19
+- The README keeps the personal intro, then three representative projects
+  (AIly, KoboForge, and the car classifier) before the full nine-repository
+  directory. The car classifier still has no public hosted app.
+- Car-type copy distinguishes the EfficientNetV2-S serving model from the
+  original ResNet50 notebook. No accuracy figures were added.
+- AIly release numbers are not hardcoded; the Releases URL is the package
+  pointer. VerseKeep is meditation-first. The portfolio row names and links
+  the DCA Lab.
+- `node tools/test-profile.mjs` enforces 98 identity, contact, project-map, CI,
+  and scheduled-audit policy assertions; 28 isolated link-audit contracts cover
+  extraction, README entry labels, endpoint policy, redirects, retries, and
+  failure disposition.
+- Push/PR CI stays zero-network. A separate read-only Node 24 workflow probes 20
   unique public links weekly and on manual dispatch with a five-minute bound.
 
-## Latest cycle: align featured-table one-liners with shipped capabilities
+## Latest cycle: profile backlog PROFILE-01 through PROFILE-05
+
+### Why this was selected
+
+The car-classifier line still said ResNet50 after the service selected
+EfficientNetV2-S. The first screen listed links without evidence. AIly's
+package version was repeated in prose. VerseKeep read as memory games, and the
+portfolio DCA Lab was absent. A failed link audit named only a URL and a status.
+
+### Changes
+
+- Serving model is EfficientNetV2-S; ResNet50 stays the original notebook path.
+  No public hosted app, and no performance metrics.
+- The first screen introduces AIly, KoboForge, and the car classifier. The full
+  directory stays below.
+- Dropped hardcoded AIly release numbers. Contracts check the PWA, unsigned
+  Windows/Android packages, and the Releases URL.
+- VerseKeep's one-liner is meditation-first, with the optional memory drill,
+  offline shell, and bundled catalog. The portfolio row links the DCA Lab.
+- Failed audits name the README entry and classify a broken destination, a
+  transient failure, or a bot restriction. Accepted LinkedIn 999 stays a pass.
+
+### Verification
+
+- `node tools/test-profile.mjs`: 98 assertions passed, up from 82.
+- `node tools/test-link-audit.mjs`: 28 assertions passed, up from 15, with no
+  live network.
+- `node tools/audit-links.mjs`: all 20 unique links passed. LinkedIn returned
+  accepted 999. The new DCA Lab URL returned HTTP 200.
+
+## Previous cycle: align featured-table one-liners with shipped capabilities
 
 ### Why this was selected
 
@@ -161,6 +194,11 @@ flakiness, especially because LinkedIn deliberately blocks automated clients.
 | Priority | Opportunity | Category | Impact | Effort / risk | Evidence / dependency |
 |---|---|---|---|---|---|
 | 1 | Reconcile profile stack/focus copy when the portfolio résumé changes | Documentation | Medium | Small / low | Requires an authoritative résumé change, not inference |
+| — | Distinguish EfficientNetV2-S serving from the ResNet50 notebook | Documentation | Medium | Tiny / low | README, AGENTS.md, and `model_manifest.json` | Completed in PROFILE-01 |
+| — | Lead the first screen with three evidenced projects | Presentation | Medium | Small / low | Full directory kept; no new metrics | Completed in PROFILE-02 |
+| — | Stop repeating an AIly package version | Maintainability | Low | Tiny / low | Capability assertions; Releases URL | Completed in PROFILE-03 |
+| — | Align VerseKeep and mention the portfolio DCA Lab | Content | Medium | Tiny / low | VerseKeep AGENTS.md; `pages/dca-calculator.html` | Completed in PROFILE-04 |
+| — | Name the README entry and failure class in link audits | Maintenance | Medium | Small / low | 28 network-free contracts; 20 live links | Completed in PROFILE-05 |
 | — | Align featured-table one-liners with shipped AIly/KoboForge/VerseKeep capabilities | Documentation | Medium | Tiny / low | Three one-liner assertions; car classifier stays unhosted | Completed in Cycle 5 |
 | — | Expose tested AIly Windows/Android packages | Documentation / discoverability | Medium | Tiny / low | Two profile assertions plus a direct-200 live Releases probe | Completed in Cycle 3 |
 | — | Add a bounded periodic live-link audit with explicit bot-status policy | Verification | Medium | Small / medium | 18 parallel probes plus 15 deterministic policy contracts | Completed in Cycle 2 |
