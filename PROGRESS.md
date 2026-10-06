@@ -208,3 +208,8 @@ flakiness, especially because LinkedIn deliberately blocks automated clients.
 Workspace next: audit AIly package distribution and install integrity. Profile
 next: reconcile stack/focus copy only when an authoritative portfolio résumé
 change provides new evidence.
+
+
+## 2026-10-07 — Clarify the scope of AIly blocks
+
+The profile describes consent-based usage and block-rule planning and states that OS hard-blocking remains pending. 98 profile assertions and 28 link-audit assertions passed.
