@@ -14,6 +14,8 @@ If you're skimming, start with these three:
 | 📫 **Email** | [alphaolivegreen@gmail.com](mailto:alphaolivegreen@gmail.com) |
 | 💼 **LinkedIn** | [linkedin.com/in/alphaeus-ng](https://www.linkedin.com/in/alphaeus-ng) |
 
+Installing AIly? [Read the installation and checksum guide](https://github.com/AlphaeusNg/AIly/blob/main/docs/install-windows-android.md) before opening the downloaded packages.
+
 ### Focus
 
 - Production **computer vision** and applied ML systems

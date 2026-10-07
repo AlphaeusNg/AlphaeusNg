@@ -218,3 +218,8 @@ The profile describes consent-based usage and block-rule planning and states tha
 ## 2026-10-07 — Bound concurrent profile link probes
 
 Link auditing uses four workers by default, with a validated configurable limit of 1–8. Output order is stable despite overlapping requests. Validation: 30 audit assertions and 20 unique live HTTPS links passed. Profile presentation and existing local README edits were excluded.
+
+
+## 2026-10-07 — Link the installer and checksum guide
+
+The profile now gives visitors the stable AIly installation/checksum guide before opening downloaded packages. Validation: 98 profile and 30 link-audit assertions plus all 21 unique live HTTPS links passed. Existing local README copy changes were excluded.
