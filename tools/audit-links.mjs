@@ -113,6 +113,9 @@ export async function probeLink(link, options = {}) {
         redirect: "manual",
         signal: controller.signal,
       });
+      try {
+        await response.body?.cancel();
+      } catch { /* A body cleanup failure does not change the HTTP result. */ }
       if (policy.acceptedStatuses.has(response.status)) {
         return { ok: true, attempt, disposition: "ok", kind: policy.kind, link, status: response.status };
       }

@@ -223,3 +223,7 @@ Link auditing uses four workers by default, with a validated configurable limit 
 ## 2026-10-07 — Link the installer and checksum guide
 
 The profile now gives visitors the stable AIly installation/checksum guide before opening downloaded packages. Validation: 98 profile and 30 link-audit assertions plus all 21 unique live HTTPS links passed. Existing local README copy changes were excluded.
+
+## 2026-10-07 — Release unread link-probe responses
+
+The bounded profile link audit cancels each unused HTTP response body before retrying or returning. Cleanup failures preserve the HTTP diagnosis. 98 profile and 31 probe assertions passed; all 21 live HTTPS links passed. No new project capability is claimed.

@@ -182,4 +182,17 @@ check(peak === 2, "link auditing respects its concurrency limit");
 assert.deepEqual(bounded.results.map((result) => result.link), orderedLinks);
 assertions += 1;
 
+
+{
+  let released = 0;
+  let calls = 0;
+  const report = await probeLink('https://example.com/', {
+    fetchImpl: async () => {
+      if (calls++) assert.equal(released, 1, 'retry releases the prior unread response first');
+      return {status: calls === 1 ? 503 : 200, headers:new Headers(), body:{async cancel(){ released++; }}};
+    }, retryDelayMs:0,
+  });
+  check(report.ok && released === 2, 'successful and retry responses both release their unread bodies');
+}
+
 console.log(`test-link-audit.mjs: ${assertions} extraction, policy, and retry assertions passed`);
