@@ -213,3 +213,8 @@ change provides new evidence.
 ## 2026-10-07 — Clarify the scope of AIly blocks
 
 The profile describes consent-based usage and block-rule planning and states that OS hard-blocking remains pending. 98 profile assertions and 28 link-audit assertions passed.
+
+
+## 2026-10-07 — Bound concurrent profile link probes
+
+Link auditing uses four workers by default, with a validated configurable limit of 1–8. Output order is stable despite overlapping requests. Validation: 30 audit assertions and 20 unique live HTTPS links passed. Profile presentation and existing local README edits were excluded.

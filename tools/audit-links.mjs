@@ -162,9 +162,17 @@ export async function auditMarkdownLinks(markdown, options = {}) {
     if (!labels.includes(item.entry)) labels.push(item.entry);
   }
   const links = [...grouped.keys()];
-  const results = await Promise.all(links.map(async (link) => {
-    const result = await probeLink(link, options);
-    return { ...result, entries: grouped.get(link) };
+  const requested = Number(options.concurrency ?? 4);
+  const concurrency = Number.isInteger(requested) && requested >= 1 && requested <= 8 ? requested : 4;
+  const results = new Array(links.length);
+  let next = 0;
+  await Promise.all(Array.from({ length: Math.min(concurrency, links.length) }, async () => {
+    while (next < links.length) {
+      const index = next++;
+      const link = links[index];
+      const result = await probeLink(link, options);
+      results[index] = { ...result, entries: grouped.get(link) };
+    }
   }));
   return { links, results, failures: results.filter((result) => !result.ok) };
 }

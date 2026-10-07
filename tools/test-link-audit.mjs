@@ -165,4 +165,21 @@ check(
   "a bot restriction names the README entry instead of looking like a dead link",
 );
 
+let active = 0;
+let peak = 0;
+const orderedLinks = Array.from({ length: 9 }, (_, index) => `https://example.com/${index}`);
+const bounded = await auditMarkdownLinks(orderedLinks.map((link) => `[Link](${link})`).join("\n"), {
+  concurrency: 2,
+  fetchImpl: async () => {
+    active += 1;
+    peak = Math.max(peak, active);
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    active -= 1;
+    return { status: 200, headers: new Headers() };
+  },
+});
+check(peak === 2, "link auditing respects its concurrency limit");
+assert.deepEqual(bounded.results.map((result) => result.link), orderedLinks);
+assertions += 1;
+
 console.log(`test-link-audit.mjs: ${assertions} extraction, policy, and retry assertions passed`);
