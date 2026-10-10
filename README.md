@@ -34,7 +34,7 @@ Shipping internal supply-chain AI tools at Panasonic, and polishing AIly (a PWA 
 
 | Repo | What | Live |
 |:--|:--|:--|
-| [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, conviction page, DCA Lab, and vault viewer | [Site](https://alphaeusng.github.io/) · [DCA Lab](https://alphaeusng.github.io/pages/dca-calculator.html) |
+| [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, personal writing, conviction page, DCA Lab, and vault viewer | [Site](https://alphaeusng.github.io/) · [Thoughts](https://alphaeusng.github.io/pages/alphaeus-thoughts.html) · [DCA Lab](https://alphaeusng.github.io/pages/dca-calculator.html) |
 | [AIly](https://github.com/AlphaeusNg/AIly) | Local-first PWA plus unsigned Windows/Android dogfood for targets, tutorials, consent-based usage, and block-rule planning | [App](https://alphaeusng.github.io/AIly/) · [Packages](https://github.com/AlphaeusNg/AIly/releases) |
 | [KoboForge](https://github.com/AlphaeusNg/KoboForge) | Local-first EPUB converter and Kobo editor with a local recovery draft | [App](https://alphaeusng.github.io/KoboForge/) |
 | [AlpArcade](https://github.com/AlphaeusNg/AlpArcade) | Zero-build browser arcade with optional cloud scores | [Play](https://alphaeusng.github.io/AlpArcade/) |

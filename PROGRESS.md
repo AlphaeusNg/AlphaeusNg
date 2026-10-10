@@ -227,3 +227,9 @@ The profile now gives visitors the stable AIly installation/checksum guide befor
 ## 2026-10-07 — Release unread link-probe responses
 
 The bounded profile link audit cancels each unused HTTP response body before retrying or returning. Cleanup failures preserve the HTTP diagnosis. 98 profile and 31 probe assertions passed; all 21 live HTTPS links passed. No new project capability is claimed.
+
+## 2026-10-11 — Expose personal writing from the profile project table
+
+Added a direct Thoughts link beside the portfolio and DCA links, and described the existing published writing surface. Professional biography and selected stack are unchanged.
+
+Validation: 98 profile and 31 link-audit assertions. All 22 links were probed; the GitHub installation-guide page returned a transient 503 on two audits, while a cache-bypassing request returned HTTP 200 and the GitHub API independently confirmed the file exists.
