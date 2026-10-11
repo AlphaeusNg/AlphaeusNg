@@ -48,6 +48,19 @@ const retried = await probeLink("https://example.com/", {
 });
 check(retried.ok && retryCalls === 2 && retried.attempt === 2, "transient server failures retry then recover");
 
+let timeoutResponses = 0;
+const recoveredTimeout = await probeLink("https://example.com/timeout", {
+  fetchImpl: async () => ({ status: ++timeoutResponses === 1 ? 408 : 200, headers: new Headers() }),
+  retryDelayMs: 0,
+  timeoutMs: 100,
+});
+check(recoveredTimeout.ok && recoveredTimeout.attempt === 2, "HTTP request timeouts retry and can recover");
+const exhaustedTimeout = await probeLink("https://example.com/timeout", {
+  attempts: 2, fetchImpl: async () => ({ status: 408, headers: new Headers() }), retryDelayMs: 0,
+});
+check(!exhaustedTimeout.ok && exhaustedTimeout.attempt === 2 && exhaustedTimeout.disposition === "transient",
+  "exhausted request timeouts keep the transient disposition and retry bound");
+
 let redirectCalls = 0;
 const redirected = await probeLink("https://example.com/", {
   fetchImpl: async () => {

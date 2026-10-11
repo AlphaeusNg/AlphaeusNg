@@ -233,3 +233,9 @@ The bounded profile link audit cancels each unused HTTP response body before ret
 Added a direct Thoughts link beside the portfolio and DCA links, and described the existing published writing surface. Professional biography and selected stack are unchanged.
 
 Validation: 98 profile and 31 link-audit assertions. All 22 links were probed; the GitHub installation-guide page returned a transient 503 on two audits, while a cache-bypassing request returned HTTP 200 and the GitHub API independently confirmed the file exists.
+
+## 2026-10-11 — Retry HTTP request-timeout responses
+
+The profile link audit now retries HTTP 408 responses within the existing attempt limit, consistent with its transient classification. An exhausted timeout stays transient; canonical redirect and bot-block policies stay intact.
+
+Validation: 98 profile assertions and 33 audit assertions, including recovered and exhausted timeouts.
