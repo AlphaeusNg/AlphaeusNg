@@ -208,4 +208,17 @@ assertions += 1;
   check(report.ok && released === 2, 'successful and retry responses both release their unread bodies');
 }
 
+
+
+for (const [header, expected] of [["2", 2000], ["999999", 10000], ["invalid", 25], ["Wed, 01 Jan 2020 00:00:00 GMT", 0]]) {
+  const waits = []; let calls = 0;
+  const result = await probeLink("https://example.com/rate-limit", {
+    retryDelayMs: 25, wait: async (ms) => { waits.push(ms); },
+    fetchImpl: async () => ({ status: ++calls === 1 ? 429 : 200, headers: new Headers({"retry-after": header}) }),
+  });
+  assert.equal(result.ok, true);
+  assert.deepEqual(waits, [expected], `Retry-After ${header} stays bounded and preserves recovery`);
+  assertions += 2;
+}
+
 console.log(`test-link-audit.mjs: ${assertions} extraction, policy, and retry assertions passed`);

@@ -63,6 +63,13 @@ export function policyFor(link, token = "") {
   };
 }
 
+function retryDelayFor(response, fallback) {
+  const value = response.headers?.get?.("retry-after")?.trim();
+  if (!value) return fallback;
+  const delay = /^\d+$/.test(value) ? Number(value) * 1000 : Date.parse(value) - Date.now();
+  return Number.isFinite(delay) ? Math.min(10_000, Math.max(0, delay)) : fallback;
+}
+
 function reasonFor(response) {
   if (response.status >= 300 && response.status < 400) {
     const location = response.headers?.get?.("location") || "unknown location";
@@ -121,7 +128,7 @@ export async function probeLink(link, options = {}) {
       }
       const retryable = response.status === 408 || response.status === 429 || response.status >= 500;
       if (retryable && attempt < attempts) {
-        await wait(retryDelayMs);
+        await wait(retryDelayFor(response, retryDelayMs));
         continue;
       }
       const reason = reasonFor(response);

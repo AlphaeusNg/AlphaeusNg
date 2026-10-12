@@ -239,3 +239,9 @@ Validation: 98 profile and 31 link-audit assertions. All 22 links were probed; t
 The profile link audit now retries HTTP 408 responses within the existing attempt limit, consistent with its transient classification. An exhausted timeout stays transient; canonical redirect and bot-block policies stay intact.
 
 Validation: 98 profile assertions and 33 audit assertions, including recovered and exhausted timeouts.
+
+## 2026-10-13 — Honor bounded Retry-After in profile link probes
+
+Transient HTTP responses can supply Retry-After seconds or dates; waits stay capped at ten seconds. Invalid headers retain the existing retry delay. No token or redirect policy changes.
+
+Validation: 98 profile and 41 link-audit assertions passed; all 22 live HTTPS links passed.
