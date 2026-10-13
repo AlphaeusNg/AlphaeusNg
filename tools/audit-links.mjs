@@ -87,7 +87,7 @@ export function classifyProbeFailure({ reason = "", status = null } = {}) {
     status === null ||
     status === 408 ||
     status === 429 ||
-    (typeof status === "number" && status >= 500) ||
+    (typeof status === "number" && status >= 500 && status < 600) ||
     /timed out|network error/i.test(String(reason))
   ) {
     return "transient";
@@ -126,7 +126,8 @@ export async function probeLink(link, options = {}) {
       if (policy.acceptedStatuses.has(response.status)) {
         return { ok: true, attempt, disposition: "ok", kind: policy.kind, link, status: response.status };
       }
-      const retryable = response.status === 408 || response.status === 429 || response.status >= 500;
+      const retryable = response.status === 408 || response.status === 429 ||
+        (response.status >= 500 && response.status < 600);
       if (retryable && attempt < attempts) {
         await wait(retryDelayFor(response, retryDelayMs));
         continue;

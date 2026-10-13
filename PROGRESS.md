@@ -245,3 +245,15 @@ Validation: 98 profile assertions and 33 audit assertions, including recovered a
 Transient HTTP responses can supply Retry-After seconds or dates; waits stay capped at ten seconds. Invalid headers retain the existing retry delay. No token or redirect policy changes.
 
 Validation: 98 profile and 41 link-audit assertions passed; all 22 live HTTPS links passed.
+
+## 2026-10-13 — Avoid retrying public bot restrictions as server outages
+
+The audit classified HTTP 999 as a bot restriction but retried it because its
+server-error predicate accepted every status above 500. Retry and transient
+server-error checks now cover only HTTP 500–599. Non-LinkedIn 999 responses
+fail after one request; LinkedIn retains its explicit accepted-999 policy.
+
+Validation: the new public-999 regression failed before the fix. All 98 profile
+and 42 link-audit assertions passed afterward, along with syntax and whitespace
+checks. All 22 live HTTPS links passed. Existing primary README edits were
+excluded; profile copy and package claims were unchanged.

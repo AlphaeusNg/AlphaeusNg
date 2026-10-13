@@ -124,6 +124,19 @@ check(
 check(classifyProbeFailure({ status: 404, reason: "unexpected HTTP 404" }) === "broken-destination", "missing pages are broken destinations");
 check(classifyProbeFailure({ status: 999, reason: "unexpected HTTP 999" }) === "bot-restriction", "a non-accepted 999 is a bot restriction");
 
+let blockedPublicCalls = 0;
+const blockedPublic = await probeLink("https://example.com/blocked", {
+  fetchImpl: async () => {
+    blockedPublicCalls += 1;
+    return { status: 999, headers: new Headers() };
+  },
+  retryDelayMs: 0,
+});
+check(
+  !blockedPublic.ok && blockedPublic.disposition === "bot-restriction" && blockedPublicCalls === 1,
+  "public HTTP 999 restrictions fail once without retrying as a server outage",
+);
+
 const sample = [
   "### Hi, I'm Alphaeus Ng",
   "",
