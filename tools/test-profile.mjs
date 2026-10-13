@@ -40,6 +40,33 @@ const expectedProjects = new Map([
   ["Car-Type-Classification-Service", ["https://github.com/AlphaeusNg/Car-Type-Classification-Service", null]],
 ]);
 
+const chooser = readme.split("### Choose a project\n")[1]?.split("### On this GitHub")[0] || "";
+check(
+  chooser.split("\n").filter((line) => line.startsWith("- ")).length === 7,
+  "task chooser stays compact with seven choices",
+);
+for (const [name, [repoUrl, liveUrl]] of expectedProjects) {
+  if (name === "alphaeusng.github.io") continue;
+  check(
+    chooser.includes(`(${liveUrl || repoUrl})`),
+    `task chooser routes ${name} to its live app or self-hosted source`,
+  );
+}
+check(
+  chooser.includes("(https://alphaeusng.github.io/pages/alphaeus-thoughts.html)"),
+  "writing choice opens the published writing page directly",
+);
+check(
+  /\[Read ChristoDay[^\]]*\]/.test(chooser) &&
+    /\[Meditate with VerseKeep\]/.test(chooser) && /\[Browse Biblical Truth notes\]/.test(chooser),
+  "Scripture choices distinguish reading, meditation, and note browsing",
+);
+check(
+  chooser.split("\n").some((line) => line.includes("Car-Type-Classification-Service") &&
+    /source/i.test(line) && /self-hosted/i.test(line) && /no public hosted app/i.test(line)),
+  "ML source choice keeps the self-hosting boundary next to its link",
+);
+
 const section = readme.split("### On this GitHub")[1]?.split("⚡ Fun fact:")[0] || "";
 const rows = section
   .split("\n")

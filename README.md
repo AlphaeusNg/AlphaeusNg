@@ -30,6 +30,16 @@ Installing AIly? [Read the installation and checksum guide](https://github.com/A
 
 Shipping internal supply-chain AI tools at Panasonic, and polishing AIly (a PWA plus unsigned Windows/Android dogfood), local-first web tools, and Scripture study products.
 
+### Choose a project
+
+- Plan your targets — [Open AIly](https://alphaeusng.github.io/AIly/).
+- Convert or edit an EPUB — [Open KoboForge](https://alphaeusng.github.io/KoboForge/).
+- Compare Singapore cashback cards — [Compare with CardFitSG](https://alphaeusng.github.io/CardFitSG/).
+- Play browser games — [Play AlpArcade](https://alphaeusng.github.io/AlpArcade/).
+- Study Scripture — [Read ChristoDay's weekday plan](https://alphaeusng.github.io/ChristoDay/) · [Meditate with VerseKeep](https://alphaeusng.github.io/VerseKeep/) · [Browse Biblical Truth notes](https://alphaeusng.github.io/pages/seeking-biblical-truth/).
+- Read my writing — [Read my Thoughts](https://alphaeusng.github.io/pages/alphaeus-thoughts.html).
+- Explore a computer vision API — [Inspect the car classifier source](https://github.com/AlphaeusNg/Car-Type-Classification-Service). Self-hosted; no public hosted app.
+
 ### On this GitHub
 
 | Repo | What | Live |

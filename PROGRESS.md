@@ -257,3 +257,20 @@ Validation: the new public-999 regression failed before the fix. All 98 profile
 and 42 link-audit assertions passed afterward, along with syntax and whitespace
 checks. All 22 live HTTPS links passed. Existing primary README edits were
 excluded; profile copy and package claims were unchanged.
+
+## 2026-10-14 — Choose a project by task
+
+Researched GitHub's profile README and Markdown guidance and inspected the
+published destinations before writing `docs/FEATURE_ROADMAP.md`. The profile
+now offers seven task choices above the repository directory. Scripture links
+distinguish reading, meditation, and note browsing; the ML source choice states
+that the service is self-hosted with no public hosted app.
+
+Validation: 110 profile assertions and 42 link-audit assertions passed, along
+with syntax and whitespace checks. All 22 unique live README links passed.
+The chooser reuses existing canonical destinations; biography, lead projects,
+installer guidance, and all directory rows remain intact. Existing primary
+README edits were excluded by using an isolated origin/main worktree.
+
+Next priorities and source links are recorded in the roadmap. Visitor benefit
+is a navigation hypothesis, with no analytics or conversion claim.
