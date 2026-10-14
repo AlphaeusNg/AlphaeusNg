@@ -2,7 +2,7 @@
 
 **AI Research Engineer** @ Panasonic R&D (Singapore) · **NTU** Computer Science · into **CV** & **NLP**.
 
-If you're skimming, start with these three:
+Start with these three:
 
 - **[AIly](https://alphaeusng.github.io/AIly/)** — local-first productivity ally: a PWA for targets, tutorials, consent-based usage tracking, and block-rule planning (OS hard-blocking is still pending), with unsigned [Windows / Android downloads](https://github.com/AlphaeusNg/AIly/releases).
 - **[KoboForge](https://alphaeusng.github.io/KoboForge/)** — local-first EPUB conversion and Kobo editing in the browser, with a private local recovery draft.
@@ -28,7 +28,7 @@ Installing AIly? [Read the installation and checksum guide](https://github.com/A
 
 ### Currently
 
-Shipping internal supply-chain AI tools at Panasonic, and polishing AIly (a PWA plus unsigned Windows/Android dogfood), local-first web tools, and Scripture study products.
+Shipping internal supply-chain AI tools at Panasonic.
 
 ### Choose a project
 
@@ -55,5 +55,3 @@ Shipping internal supply-chain AI tools at Panasonic, and polishing AIly (a PWA 
 | [Car-Type-Classification-Service](https://github.com/AlphaeusNg/Car-Type-Classification-Service) | FastAPI service for 196 car types; serving model is EfficientNetV2-S, and ResNet50 remains the original notebook path | — |
 
 ⚡ Fun fact: I once ate ~1kg of salmon at one go.
-
-Thanks for dropping by!
