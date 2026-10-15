@@ -274,3 +274,10 @@ README edits were excluded by using an isolated origin/main worktree.
 
 Next priorities and source links are recorded in the roadmap. Visitor benefit
 is a navigation hypothesis, with no analytics or conversion claim.
+
+
+## 2026-10-16 — Describe the latest Scripture features
+
+Updated the project directory to mention VerseKeep book drills starting with Proverbs and ChristoDay’s printable four-week checklist. Both descriptions reflect features already merged into the destination repositories. The meditation-first description, offline scope and existing canonical links remain intact.
+
+Validation: all 110 profile assertions, 42 deterministic link-audit assertions and all 22 unique live HTTPS links passed.
