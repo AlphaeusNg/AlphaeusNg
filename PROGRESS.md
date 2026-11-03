@@ -281,3 +281,15 @@ is a navigation hypothesis, with no analytics or conversion claim.
 Updated the project directory to mention VerseKeep book drills starting with Proverbs and ChristoDay’s printable four-week checklist. Both descriptions reflect features already merged into the destination repositories. The meditation-first description, offline scope and existing canonical links remain intact.
 
 Validation: all 110 profile assertions, 42 deterministic link-audit assertions and all 22 unique live HTTPS links passed.
+
+## 2026-11-04 — State the classifier's required local weights
+
+The lead classifier description now tells visitors to supply compatible model
+weights separately because Git excludes them. This reflects the classifier's
+existing Quick Start and artifact distribution policy, and prevents a fresh
+clone from being mistaken for a ready-to-run predictor. The model architecture,
+self-hosting boundary, biography and project links remain intact.
+
+Validation: all 110 profile and 42 deterministic link-audit assertions passed.
+All 22 unique live HTTPS links passed the existing policy; LinkedIn returned
+its explicitly accepted HTTP 999 bot restriction. No new capability is claimed.

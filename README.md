@@ -6,7 +6,7 @@ Start with these three:
 
 - **[AIly](https://alphaeusng.github.io/AIly/)** — local-first productivity ally: a PWA for targets, tutorials, consent-based usage tracking, and block-rule planning (OS hard-blocking is still pending), with unsigned [Windows / Android downloads](https://github.com/AlphaeusNg/AIly/releases).
 - **[KoboForge](https://alphaeusng.github.io/KoboForge/)** — local-first EPUB conversion and Kobo editing in the browser, with a private local recovery draft.
-- **[Car-Type-Classification-Service](https://github.com/AlphaeusNg/Car-Type-Classification-Service)** — FastAPI car-type service. The serving model is EfficientNetV2-S; ResNet50 remains the original notebook path. No public hosted app.
+- **[Car-Type-Classification-Service](https://github.com/AlphaeusNg/Car-Type-Classification-Service)** — FastAPI car-type service. The serving model is EfficientNetV2-S; ResNet50 remains the original notebook path. Supply compatible model weights separately; they are excluded from Git. No public hosted app.
 
 | | |
 |:--|:--|
