@@ -293,3 +293,13 @@ self-hosting boundary, biography and project links remain intact.
 Validation: all 110 profile and 42 deterministic link-audit assertions passed.
 All 22 unique live HTTPS links passed the existing policy; LinkedIn returned
 its explicitly accepted HTTP 999 bot restriction. No new capability is claimed.
+
+## 2026-11-05 — Make Scripture destinations clearer
+
+VerseKeep's directory link now says Meditate, matching its meditation-first
+entry point. ChristoDay's directory description exposes its existing on-device
+journal and JSON backup, verified against the destination README. No biography
+or unshipped capability claims changed.
+
+Validation: 110 profile assertions, 42 deterministic link-audit assertions and
+all 22 unique live HTTPS links passed (including LinkedIn's accepted bot policy).
