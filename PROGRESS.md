@@ -303,3 +303,14 @@ or unshipped capability claims changed.
 
 Validation: 110 profile assertions, 42 deterministic link-audit assertions and
 all 22 unique live HTTPS links passed (including LinkedIn's accepted bot policy).
+
+
+## 2026-11-05 — Expose the arcade's existing device backup
+
+The arcade directory entry now names its device backup for scores, favorites,
+recent games and controls, verified against ArcadeBackup and ArcadeFavorites.
+Optional cloud scores remain explicit. No new capability or biography claim.
+
+Validation: 110 profile assertions, 42 deterministic link-audit assertions and
+all 22 live HTTPS destinations passed under existing policy (LinkedIn's 999
+response is an accepted bot restriction).
