@@ -314,3 +314,14 @@ Optional cloud scores remain explicit. No new capability or biography claim.
 Validation: 110 profile assertions, 42 deterministic link-audit assertions and
 all 22 live HTTPS destinations passed under existing policy (LinkedIn's 999
 response is an accepted bot restriction).
+
+
+## 2026-11-05 — Expose the existing reading calendar export
+
+ChristoDay’s directory entry now names its four-week calendar export, verified
+against the app README and calendar download control. The printable checklist,
+on-device journal and JSON backup remain explicit. No new capability is claimed.
+
+Validation: all 110 profile assertions and 42 deterministic link-audit assertions
+passed. All 22 live HTTPS destinations passed the existing policy (LinkedIn's
+HTTP 999 remains an accepted automation restriction).
