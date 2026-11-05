@@ -325,3 +325,15 @@ on-device journal and JSON backup remain explicit. No new capability is claimed.
 Validation: all 110 profile assertions and 42 deterministic link-audit assertions
 passed. All 22 live HTTPS destinations passed the existing policy (LinkedIn's
 HTTP 999 remains an accepted automation restriction).
+
+
+## 2026-11-06 — Name the supported Kobo input formats
+
+The lead KoboForge description and project directory now list DOCX, PDF, TXT
+and Markdown as EPUB conversion inputs. These are verified against KoboForge's
+existing README and import controls. Visitors can identify their document type
+before opening the app; browser-only editing and private recovery remain clear.
+
+Validation: profile and deterministic link-audit contracts, whitespace checks
+and all unique live README links passed under the existing probe policy.
+No new capability or professional claim is introduced.

@@ -5,7 +5,7 @@
 Start with these three:
 
 - **[AIly](https://alphaeusng.github.io/AIly/)** — local-first productivity ally: a PWA for targets, tutorials, consent-based usage tracking, and block-rule planning (OS hard-blocking is still pending), with unsigned [Windows / Android downloads](https://github.com/AlphaeusNg/AIly/releases).
-- **[KoboForge](https://alphaeusng.github.io/KoboForge/)** — local-first EPUB conversion and Kobo editing in the browser, with a private local recovery draft.
+- **[KoboForge](https://alphaeusng.github.io/KoboForge/)** — convert DOCX, PDF, TXT, or Markdown to EPUB and edit for Kobo in the browser, with a private local recovery draft.
 - **[Car-Type-Classification-Service](https://github.com/AlphaeusNg/Car-Type-Classification-Service)** — FastAPI car-type service. The serving model is EfficientNetV2-S; ResNet50 remains the original notebook path. Supply compatible model weights separately; they are excluded from Git. No public hosted app.
 
 | | |
@@ -46,7 +46,7 @@ Shipping internal supply-chain AI tools at Panasonic.
 |:--|:--|:--|
 | [alphaeusng.github.io](https://github.com/AlphaeusNg/alphaeusng.github.io) | Portfolio, personal writing, conviction page, DCA Lab, and vault viewer | [Site](https://alphaeusng.github.io/) · [Thoughts](https://alphaeusng.github.io/pages/alphaeus-thoughts.html) · [DCA Lab](https://alphaeusng.github.io/pages/dca-calculator.html) |
 | [AIly](https://github.com/AlphaeusNg/AIly) | Local-first PWA plus unsigned Windows/Android dogfood for targets, tutorials, consent-based usage, and block-rule planning | [App](https://alphaeusng.github.io/AIly/) · [Packages](https://github.com/AlphaeusNg/AIly/releases) |
-| [KoboForge](https://github.com/AlphaeusNg/KoboForge) | Local-first EPUB converter and Kobo editor with a local recovery draft | [App](https://alphaeusng.github.io/KoboForge/) |
+| [KoboForge](https://github.com/AlphaeusNg/KoboForge) | Browser-only DOCX, PDF, TXT, and Markdown to EPUB conversion and Kobo editing with a local recovery draft | [App](https://alphaeusng.github.io/KoboForge/) |
 | [AlpArcade](https://github.com/AlphaeusNg/AlpArcade) | Zero-build browser arcade with optional cloud scores and a device backup for scores, favorites, recent games, and controls | [Play](https://alphaeusng.github.io/AlpArcade/) |
 | [VerseKeep](https://github.com/AlphaeusNg/VerseKeep) | Scripture meditation first, with an optional memory drill by topic or Bible book (starting with Proverbs); offline shell and bundled catalog | [Meditate](https://alphaeusng.github.io/VerseKeep/) |
 | [ChristoDay](https://github.com/AlphaeusNg/ChristoDay) | Christ-centered weekday gospel reading plan with a printable four-week checklist, four-week calendar export, and an on-device journal with JSON backup | [Read](https://alphaeusng.github.io/ChristoDay/) |
